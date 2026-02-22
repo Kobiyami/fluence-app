@@ -26,3 +26,40 @@ students.each do |data|
 end
 
 puts "Students created!"
+
+puts "Creating texts..."
+
+texts = [
+  {
+    title: "Le renard et le corbeau",
+    content: "Maître Corbeau, sur un arbre perché, tenait en son bec un fromage...",
+    word_count: 14
+  },
+  {
+    title: "Le lièvre et la tortue",
+    content: "Rien ne sert de courir ; il faut partir à point...",
+    word_count: 12
+  },
+  {
+    title: "Le petit chat",
+    content: "Le petit chat joue dans le jardin et poursuit un papillon...",
+    word_count: 15
+  }
+]
+
+texts.each do |data|
+  Text.create!(data)
+end
+
+puts "Texts created!"
+
+puts "Creating a test session..."
+
+Session.create!(
+  student: Student.first,
+  text: Text.first,
+  duration_seconds: 45,
+  score_wpm: (Text.first.word_count / (45.0 / 60)).round
+)
+
+puts "Test session created!"
