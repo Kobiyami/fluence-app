@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  student: one
+  text: one
+  duration_seconds: 1
+  score_wpm: 1
+
+two:
+  student: two
+  text: two
+  duration_seconds: 1
+  score_wpm: 1
