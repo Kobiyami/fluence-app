@@ -1,0 +1,30 @@
+class SessionsController < ApplicationController
+  def new
+    @student = Student.find(params[:student_id]) if params[:student_id]
+    @text = Text.find(params[:text_id]) if params[:text_id]
+  end
+
+  def start
+    @session = Session.new(
+      student_id: params[:student_id],
+      text_id: params[:text_id]
+    )
+
+    @session.start_time = Time.now
+    @session.save
+
+    render :start
+  end
+
+  def stop
+    @session = Session.find(params[:session_id])
+    @session.duration_seconds = params[:duration_seconds]
+    @session.save
+
+    redirect_to session_path(@session)
+  end
+
+  def show
+    @session = Session.find(params[:id])
+  end
+end

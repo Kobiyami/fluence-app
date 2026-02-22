@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  get "sessions/new"
+  get "sessions/start"
+  get "sessions/stop"
+  get "sessions/show"
+  get "texts/index"
+  get "texts/show"
+  get "students/index"
+  get "students/show"
+  get "students/login_form"
+  get "students/login_check"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
