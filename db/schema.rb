@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_23_085856) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_23_185628) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "reading_texts", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.integer "word_count"
+  end
 
   create_table "sessions", force: :cascade do |t|
     t.boolean "aborted", default: false, null: false
@@ -34,14 +42,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_23_085856) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "texts", force: :cascade do |t|
-    t.text "content"
-    t.datetime "created_at", null: false
-    t.string "title"
-    t.datetime "updated_at", null: false
-    t.integer "word_count"
-  end
-
+  add_foreign_key "sessions", "reading_texts", column: "text_id"
   add_foreign_key "sessions", "students"
-  add_foreign_key "sessions", "texts"
 end
