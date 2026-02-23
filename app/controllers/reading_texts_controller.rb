@@ -4,6 +4,6 @@ class ReadingTextsController < ApplicationController
   end
 
   def show
-    @reading_texts = ReadingText.find(params[:id])
+    @reading_text = ReadingText.find(params[:id])
   end
 end
