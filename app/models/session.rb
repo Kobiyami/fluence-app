@@ -2,8 +2,6 @@ class Session < ApplicationRecord
   belongs_to :student
   belongs_to :text
 
-  before_save :compute_score
-
   private
 
   def compute_score!
