@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 resources :students, only: [:index, :show]
-resources :texts, only: [:index, :show]
+resources :reading_texts, only: [:index, :show]
 
 get  "/login", to: "students#login_form"
 post "/login", to: "students#login_check"
