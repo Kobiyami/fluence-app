@@ -1,9 +1,9 @@
 class ReadingTextsController < ApplicationController
   def index
-    @texts = ReadingText.all
+    @reading_texts = ReadingText.all
   end
 
   def show
-    @text = ReadingText.find(params[:id])
+    @reading_texts = ReadingText.find(params[:id])
   end
 end
