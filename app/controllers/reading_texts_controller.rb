@@ -1,4 +1,4 @@
-class TextsController < ApplicationController
+class ReadingTextsController < ApplicationController
   def index
     @texts = ReadingText.all
   end
