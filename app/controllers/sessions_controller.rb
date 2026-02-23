@@ -1,7 +1,7 @@
 class SessionsController < ApplicationController
   def new
     @student = Student.find(params[:student_id]) if params[:student_id]
-    @text = Text.find(params[:text_id]) if params[:text_id]
+    @reading_text = ReadingText.find(params[:text_id]) if params[:text_id]
   end
 
   def start

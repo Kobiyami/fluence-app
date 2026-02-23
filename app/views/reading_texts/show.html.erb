@@ -1,15 +1,15 @@
-<h1><%= @text.title %></h1>
+<h1><%= @reading_text.title %></h1>
 
-<p><%= @text.content %></p>
+<p><%= @reading_text.content %></p>
 
-<p><strong><%= @text.word_count %></strong> mots</p>
+<p><strong><%= @reading_text.word_count %></strong> mots</p>
 
 <hr>
 
 <h2>Lancer une séance</h2>
 
 <%= form_with url: "/sessions/start", method: :post, data: { turbo: false } do %>
-  <%= hidden_field_tag :text_id, @text.id %>
+  <%= hidden_field_tag :reading_text_id, @reading_text.id %>
 
   <!-- On ajoutera student_id quand on aura le contexte -->
   <p>
