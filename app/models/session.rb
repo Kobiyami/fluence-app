@@ -2,8 +2,6 @@ class Session < ApplicationRecord
   belongs_to :student
   belongs_to :text
 
-  private
-
   def compute_score!
   return if aborted?
   return if duration_seconds.to_i <= 0
