@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
   def start
     @session = Session.new(
       student_id: params[:student_id],
-      reading_text_id: params[:text_id]
+      text_id: params[:text_id]
     )
 
     @session.save
