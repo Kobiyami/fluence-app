@@ -17,8 +17,11 @@ class SessionsController < ApplicationController
 
   def stop
     @session = Session.find(params[:session_id])
-    @session.duration_seconds = params[:duration_seconds]
-    @session.save
+    @session.duration_seconds = params[:duration_seconds].to_i
+    @session.aborted = params[:aborted] == "true"
+
+    @session.compute_score!
+    @session.save!
 
     redirect_to session_path(@session)
   end
