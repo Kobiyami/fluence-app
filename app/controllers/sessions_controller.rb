@@ -10,7 +10,6 @@ class SessionsController < ApplicationController
       text_id: params[:text_id]
     )
 
-    @session.start_time = Time.now
     @session.save
 
     render :start
