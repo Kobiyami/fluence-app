@@ -1,2 +1,18 @@
-<h1>Students#show</h1>
-<p>Find me in app/views/students/show.html.erb</p>
+<h1><%= @student.name %></h1>
+
+<p>Dernières séances :</p>
+
+<ul>
+  <% @student.sessions.order(created_at: :desc).each do |session| %>
+    <li>
+      <%= link_to "Séance du #{session.created_at.strftime('%d/%m/%Y %H:%M')}", session_path(session) %>
+      <% if session.aborted? %>
+        (abandon)
+      <% else %>
+        — <%= session.score_wpm %> mots/min
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "Nouvelle lecture", new_session_path(student_id: @student.id) %>
