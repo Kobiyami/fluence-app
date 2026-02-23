@@ -1,2 +1,16 @@
-<h1>Texts#index</h1>
-<p>Find me in app/views/texts/index.html.erb</p>
+<h1>Textes disponibles</h1>
+
+<ul>
+  <% @texts.each do |text| %>
+    <li>
+      <%= link_to text.title, text_path(text) %>
+      — <%= text.word_count %> mots
+    </li>
+  <% end %>
+</ul>
+
+<hr>
+
+<p>
+  <%= link_to "Retour aux élèves", students_path %>
+</p>
