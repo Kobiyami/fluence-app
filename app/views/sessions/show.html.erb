@@ -1,2 +1,13 @@
-<h1>Sessions#show</h1>
-<p>Find me in app/views/sessions/show.html.erb</p>
+<h1>Résultats</h1>
+
+<p>Élève : <%= @session.student.first_name %></p>
+<p>Texte : <%= @session.text.title %></p>
+
+<p>Durée : <%= @session.duration_seconds %> secondes</p>
+<p>Score : <%= @session.score_wpm %> mots/minute</p>
+
+<hr>
+
+<p>
+  <%= link_to "Retour à l'élève", student_path(@session.student) %>
+</p>
