@@ -2,7 +2,7 @@
 
 <p>Chronomètre en cours…</p>
 
-<%= form_with url: "/sessions/stop", method: :post do %>
+<%= form_with url: "/sessions/stop", method: :post, data: { turbo: false } do %>
   <%= hidden_field_tag :session_id, @session.id %>
 
   <!-- On mettra la vraie durée en JS plus tard -->
