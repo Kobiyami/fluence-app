@@ -10,7 +10,9 @@ class SessionsController < ApplicationController
       text_id: params[:text_id]
     )
 
-    @session.save
+    @session.save!  # indispensable pour avoir @session.id
+
+    @reading_text = ReadingText.find(params[:text_id])
 
     render :start
   end
