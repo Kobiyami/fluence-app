@@ -1,2 +1,27 @@
-<h1>Texts#show</h1>
-<p>Find me in app/views/texts/show.html.erb</p>
+<h1><%= @text.title %></h1>
+
+<p><%= @text.content %></p>
+
+<p><strong><%= @text.word_count %></strong> mots</p>
+
+<hr>
+
+<h2>Lancer une séance</h2>
+
+<%= form_with url: "/sessions/start", method: :post do %>
+  <%= hidden_field_tag :text_id, @text.id %>
+
+  <!-- On ajoutera student_id quand on aura le contexte -->
+  <p>
+    <%= label_tag :student_id, "Élève" %><br>
+    <%= select_tag :student_id, options_from_collection_for_select(Student.all, :id, :first_name) %>
+  </p>
+
+  <%= submit_tag "Commencer la lecture" %>
+<% end %>
+
+<hr>
+
+<p>
+  <%= link_to "Retour aux textes", texts_path %>
+</p>
