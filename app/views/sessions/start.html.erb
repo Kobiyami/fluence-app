@@ -1,12 +1,94 @@
 <h1>Lecture en cours</h1>
 
-<p>Chronomètre en cours…</p>
+<p>
+  Temps écoulé :
+  <span id="timer">0</span> secondes
+</p>
+
+<p id="status">`En attente de la voix de l'élève…`</p>
 
 <%= form_with url: "/sessions/stop", method: :post, data: { turbo: false } do %>
   <%= hidden_field_tag :session_id, @session.id %>
+  <%= hidden_field_tag :duration_seconds, 0, id: "duration_field" %>
+  <%= hidden_field_tag :aborted, false, id: "aborted_field" %>
 
-  <!-- On mettra la vraie durée en JS plus tard -->
-  <%= hidden_field_tag :duration_seconds, 30 %>
-
-  <%= submit_tag "Arrêter" %>
+  <%= submit_tag "Arrêter", id: "stop_button" %>
 <% end %>
+
+<script>
+  // -----------------------------
+  // 1) Initialisation
+  // -----------------------------
+  const timerSpan = document.getElementById("timer");
+  const durationField = document.getElementById("duration_field");
+  const abortedField = document.getElementById("aborted_field");
+  const statusText = document.getElementById("status");
+  const stopButton = document.getElementById("stop_button");
+
+  let startTime = null;
+  let timerInterval = null;
+  let speechStarted = false;
+
+  // -----------------------------
+  // 2) Sécurité : annuler si pas de voix en 10 secondes
+  // -----------------------------
+  const noSpeechTimeout = setTimeout(() => {
+    if (!speechStarted) {
+      statusText.textContent = "Aucune lecture détectée. Séance annulée.";
+      abortedField.value = true;
+      stopButton.click(); // on envoie le formulaire automatiquement
+    }
+  }, 10000); // 10 secondes
+
+  // -----------------------------
+  // 3) Configuration de la reconnaissance vocale
+  // -----------------------------
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+
+  recognition.continuous = true;     // écouter en continu
+  recognition.interimResults = true; // résultats partiels OK
+  recognition.lang = "fr-FR";
+
+  // -----------------------------
+  // 4) Début de la parole détecté
+  // -----------------------------
+  recognition.onspeechstart = () => {
+    if (!speechStarted) {
+      speechStarted = true;
+      clearTimeout(noSpeechTimeout);
+
+      statusText.textContent = "Lecture détectée. Chronomètre lancé.";
+
+      startTime = performance.now();
+
+      // Mise à jour du chronomètre
+      timerInterval = setInterval(() => {
+        const elapsed = Math.floor((performance.now() - startTime) / 1000);
+        timerSpan.textContent = elapsed;
+        durationField.value = elapsed;
+      }, 200);
+
+      // Arrêt automatique au bout de 60 secondes
+      setTimeout(() => {
+        statusText.textContent = "Temps écoulé (60 secondes).";
+        recognition.stop();
+        stopButton.click();
+      }, 60000);
+    }
+  };
+
+  // -----------------------------
+  // 5) Gestion de l arrêt manuel
+  // -----------------------------
+  stopButton.addEventListener("click", () => {
+    recognition.stop();
+    clearInterval(timerInterval);
+  });
+
+  // -----------------------------
+  // 6) Lancement de l écoute
+  // -----------------------------
+  recognition.start();
+  statusText.textContent = "En attente de la voix de l'élève…";
+</script>
