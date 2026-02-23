@@ -3,17 +3,19 @@
 <p>Texte : <%= @reading_text&.title %></p>
 <p>Élève : <%= @student&.first_name %></p>
 
-<p>
-  <%= button_to "Démarrer",
-              "/sessions/start",
-              method: :post,
-              params: {
-                student_id: @student.id,
-                text_id: @reading_text.id
-              },
-              data: { turbo: false } %>
-</p>
+<div style="margin: 20px 0; padding: 15px; border: 1px solid #ccc;">
+  <%= simple_format(@reading_text.content) %>
+</div>
 
 <p>
-  (On améliorera cet écran quand on aura le flux complet)
+  <%= button_to "Démarrer",
+                "/sessions/start",
+                method: :post,
+                params: {
+                  student_id: @student.id,
+                  text_id: @reading_text.id
+                },
+                data: { turbo: false } %>
 </p>
+
+<p>(On améliorera cet écran quand on aura le flux complet)</p>
