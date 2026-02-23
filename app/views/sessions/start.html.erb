@@ -1,11 +1,16 @@
 <h1>Lecture en cours</h1>
 
+<div style="margin: 20px 0; padding: 15px; border: 1px solid #ccc;">
+  <h2><%= @reading_text.title %></h2>
+  <%= simple_format(@reading_text.content) %>
+</div>
+
 <p>
   Temps écoulé :
   <span id="timer">0</span> secondes
 </p>
 
-<p id="status">`En attente de la voix de l'élève…`</p>
+<p id="status">En attente de la voix de l'élève…</p>
 
 <%= form_with url: "/sessions/stop", method: :post, data: { turbo: false } do %>
   <%= hidden_field_tag :session_id, @session.id %>
@@ -14,6 +19,7 @@
 
   <%= submit_tag "Arrêter", id: "stop_button" %>
 <% end %>
+
 
 <script>
   // -----------------------------
