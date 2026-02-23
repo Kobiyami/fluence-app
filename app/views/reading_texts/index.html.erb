@@ -1,9 +1,9 @@
 <h1>Textes disponibles</h1>
 
 <ul>
-  <% @texts.each do |text| %>
+  <% @reading_texts.each do |text| %>
     <li>
-      <%= link_to text.title, text_path(text) %>
+      <%= link_to text.title, reading_text_path(text) %>
       — <%= text.word_count %> mots
     </li>
   <% end %>
