@@ -1,2 +1,12 @@
-<h1>Sessions#start</h1>
-<p>Find me in app/views/sessions/start.html.erb</p>
+<h1>Lecture en cours</h1>
+
+<p>Chronomètre en cours…</p>
+
+<%= form_with url: "/sessions/stop", method: :post do %>
+  <%= hidden_field_tag :session_id, @session.id %>
+
+  <!-- On mettra la vraie durée en JS plus tard -->
+  <%= hidden_field_tag :duration_seconds, 30 %>
+
+  <%= submit_tag "Arrêter" %>
+<% end %>
