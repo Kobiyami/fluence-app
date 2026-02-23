@@ -4,7 +4,13 @@
 <p>Élève : <%= @student&.first_name %></p>
 
 <p>
-  <%= button_to "Démarrer", "/sessions/start", method: :post %>
+  <%= button_to "Démarrer",
+              "/sessions/start",
+              method: :post,
+              params: {
+                student_id: @student.id,
+                text_id: @reading_text.id
+              } %>
 </p>
 
 <p>
