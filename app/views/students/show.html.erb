@@ -22,7 +22,8 @@
 <h2>Choisir un texte :</h2>
 
 <ul>
-  <% Text.all.each do |text| %>
+  <% ReadingText.all.each do |text| %>
+
     <li>
       <%= link_to text.title, new_session_path(student_id: @student.id, text_id: text.id) %>
     </li>

@@ -1,4 +1,4 @@
-class Text < ApplicationRecord
+class ReadingText < ApplicationRecord
   has_many :sessions, dependent: :destroy
 
   validates :title, :content, :word_count, presence: true

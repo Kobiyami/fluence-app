@@ -1,6 +1,6 @@
 class Session < ApplicationRecord
   belongs_to :student
-  belongs_to :text
+  belongs_to :reading_text
 
   def compute_score!
   return if aborted?
