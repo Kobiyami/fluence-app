@@ -1,18 +1,30 @@
-<h1><%= @student.name %></h1>
+<h1><%= @student.first_name %> <%= @student.last_name %></h1>
 
-<p>Dernières séances :</p>
+<p>Code élève : <%= @student.code %></p>
+
+<h2>Dernières séances :</h2>
 
 <ul>
   <% @student.sessions.order(created_at: :desc).each do |session| %>
     <li>
       <%= link_to "Séance du #{session.created_at.strftime('%d/%m/%Y %H:%M')}", session_path(session) %>
       <% if session.aborted? %>
-        (abandon)
-      <% else %>
+        — <strong>abandon</strong>
+      <% elsif session.score_wpm.present? %>
         — <%= session.score_wpm %> mots/min
+      <% else %>
+        — (pas de score)
       <% end %>
     </li>
   <% end %>
 </ul>
 
-<%= link_to "Nouvelle lecture", new_session_path(student_id: @student.id) %>
+<h2>Choisir un texte :</h2>
+
+<ul>
+  <% Text.all.each do |text| %>
+    <li>
+      <%= link_to text.title, new_session_path(student_id: @student.id, text_id: text.id) %>
+    </li>
+  <% end %>
+</ul>
