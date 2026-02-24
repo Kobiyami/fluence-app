@@ -1,4 +1,7 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "controllers"
 import "@hotwired/turbo-rails"
+
+// Désactivation TEMPORAIRE de Turbo Drive pour vérifier le cache
+Turbo.session.drive = false
+
 console.log("APPLICATION JS CHARGÉ")
