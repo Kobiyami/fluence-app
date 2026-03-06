@@ -31,7 +31,8 @@
                          data: { session_target: "aborted" } %>
 
     <%= submit_tag "Arrêter",
-                   data: { session_target: "stopButton" } %>
+      data: { session_target: "stopButton", action: "click->session#stop" } %>
+
 
   <% end %>
 

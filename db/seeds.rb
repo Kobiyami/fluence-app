@@ -9,7 +9,7 @@
 #   end
 puts "Cleaning database..."
 Student.destroy_all
-Text.destroy_all
+ReadingText.destroy_all
 Session.destroy_all
 
 puts "Creating students..."
@@ -48,7 +48,7 @@ texts = [
 ]
 
 texts.each do |data|
-  Text.create!(data)
+  ReadingText.create!(data)
 end
 
 puts "Texts created!"
@@ -57,9 +57,9 @@ puts "Creating a test session..."
 
 Session.create!(
   student: Student.first,
-  text: Text.first,
+  reading_text: ReadingText.first,
   duration_seconds: 45,
-  score_wpm: (Text.first.word_count / (45.0 / 60)).round
+  score_wpm: (ReadingText.first.word_count / (45.0 / 60)).round
 )
 
 puts "Test session created!"

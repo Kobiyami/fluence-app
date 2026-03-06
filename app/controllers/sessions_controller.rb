@@ -1,18 +1,21 @@
 class SessionsController < ApplicationController
   def new
     @student = Student.find(params[:student_id]) if params[:student_id]
-    @reading_text = ReadingText.find(params[:text_id]) if params[:text_id]
+    @reading_text = ReadingText.find(params[:reading_text_id]) if params[:reading_text_id]
   end
 
   def start
     @session = Session.new(
       student_id: params[:student_id],
-      text_id: params[:text_id]
+      reading_text_id: params[:reading_text_id]
     )
 
-    @session.save!  # indispensable pour avoir @session.id
+    unless @session.save
+  Rails.logger.info @session.errors.full_messages.inspect
+end
 
-    @reading_text = ReadingText.find(params[:text_id])
+
+    @reading_text = ReadingText.find(params[:reading_text_id])
 
     render :start
   end

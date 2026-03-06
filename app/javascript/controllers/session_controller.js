@@ -4,6 +4,8 @@ export default class extends Controller {
   static targets = ["timer", "duration", "aborted", "stopButton"]
 
   connect() {
+    console.log("SESSION CONTROLLER CONNECTÉ");
+
     this.startTime = null
     this.timerInterval = null
     this.speechStarted = false
@@ -25,12 +27,17 @@ export default class extends Controller {
   }
 
   startListening() {
-    this.recognition.start()
+    try {
+      this.recognition.start()
+    } catch (e) {
+      console.warn("SpeechRecognition start error:", e)
+    }
   }
 
   startNoSpeechTimeout() {
     this.noSpeechTimeout = setTimeout(() => {
       if (!this.speechStarted) {
+        this.stop()
         this.abortedTarget.value = true
         this.stopButtonTarget.click()
       }
@@ -38,6 +45,7 @@ export default class extends Controller {
   }
 
   handleSpeechStart() {
+    console.log("🎤 Speech detected !");
     if (this.speechStarted) return
 
     this.speechStarted = true
@@ -52,13 +60,31 @@ export default class extends Controller {
     }, 200)
 
     setTimeout(() => {
-      this.recognition.stop()
+      this.stop()
       this.stopButtonTarget.click()
     }, 60000)
   }
 
   stop() {
-    this.recognition.stop()
-    clearInterval(this.timerInterval)
+    if (this.timerInterval) clearInterval(this.timerInterval)
+
+    if (this.recognition) {
+      try {
+        this.recognition.stop()
+      } catch (e) {
+        console.warn("SpeechRecognition stop error:", e)
+      }
+    }
+  }
+
+  disconnect() {
+    if (this.timerInterval) clearInterval(this.timerInterval)
+    if (this.noSpeechTimeout) clearTimeout(this.noSpeechTimeout)
+
+    if (this.recognition) {
+      try {
+        this.recognition.stop()
+      } catch (e) {}
+    }
   }
 }

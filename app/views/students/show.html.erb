@@ -1,3 +1,5 @@
+<p><%= link_to "Changer d’élève", students_path %></p>
+
 <h1><%= @student.first_name %> <%= @student.last_name %></h1>
 
 <p>Code élève : <%= @student.code %></p>
@@ -6,17 +8,18 @@
 
 <ul>
   <% @student.sessions.order(created_at: :desc).each do |session| %>
-    <li>
-      <%= link_to "Séance du #{session.created_at.strftime('%d/%m/%Y %H:%M')}", session_path(session) %>
-      <% if session.aborted? %>
-        — <strong>abandon</strong>
-      <% elsif session.score_wpm.present? %>
-        — <%= session.score_wpm %> mots/min
-      <% else %>
-        — (pas de score)
-      <% end %>
-    </li>
-  <% end %>
+  <li>
+    <%= link_to "Séance du #{session.created_at.strftime('%d/%m/%Y %H:%M')}", session_path(session) %>
+    — <em><%= session.reading_text.title %></em>
+    <% if session.aborted? %>
+      — <strong>abandon</strong>
+    <% elsif session.score_wpm.present? %>
+      — <%= session.score_wpm %> mots/min
+    <% else %>
+      — (pas de score)
+    <% end %>
+  </li>
+<% end %>
 </ul>
 
 <h2>Choisir un texte :</h2>
@@ -25,7 +28,7 @@
   <% ReadingText.all.each do |text| %>
 
     <li>
-      <%= link_to text.title, new_session_path(student_id: @student.id, text_id: text.id) %>
+      <%= link_to text.title, new_session_path(student_id: @student.id, reading_text_id: text.id) %>
     </li>
   <% end %>
 </ul>

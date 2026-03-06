@@ -1,7 +1,7 @@
 import "controllers"
 import "@hotwired/turbo-rails"
 
-// Désactivation TEMPORAIRE de Turbo Drive pour vérifier le cache
-Turbo.session.drive = false
+// Turbo Drive activé (comportement normal)
+Turbo.session.drive = true
 
 console.log("APPLICATION JS CHARGÉ")
