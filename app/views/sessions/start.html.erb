@@ -33,7 +33,21 @@
     <%= submit_tag "Arrêter",
       data: { session_target: "stopButton", action: "click->session#stop" } %>
 
-
   <% end %>
 
+  <hr>
+
+  <!-- 🎤 Enregistrement audio Whisper -->
+  <h2>Enregistrement audio</h2>
+
+  <button id="start-record">🎤 Commencer l’enregistrement</button>
+  <button id="stop-record" disabled>⏹️ Arrêter</button>
+
+  <p id="audio-status"></p>
+
+  <h3>Transcription Whisper</h3>
+  <pre id="transcription"></pre>
+
 </div>
+
+<%= javascript_include_tag "session_audio" %>

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   get  "/login", to: "students#login_form"
   post "/login", to: "students#login_check"
+  post "/transcriptions", to: "transcriptions#create"
 
   resources :sessions, only: [:new, :show]
   post "/sessions/start", to: "sessions#start"
