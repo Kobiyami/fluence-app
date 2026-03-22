@@ -13,8 +13,8 @@
     — <em><%= session.reading_text.title %></em>
     <% if session.aborted? %>
       — <strong>abandon</strong>
-    <% elsif session.score_wpm.present? %>
-      — <%= session.score_wpm %> mots/min
+    <% elsif session.mclm_score.present? %>
+    — <%= session.mclm_score %> MCLM
     <% else %>
       — (pas de score)
     <% end %>
