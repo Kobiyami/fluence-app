@@ -2,52 +2,32 @@
 
   <h1>Lecture en cours</h1>
 
-  <!-- Bloc du texte à lire -->
-  <div style="margin: 20px 0; padding: 15px; border: 1px solid #ccc;">
+  <div class="reading-text-block">
     <h2><%= @reading_text.title %></h2>
     <%= simple_format(@reading_text.content) %>
   </div>
 
-  <!-- Timer -->
-  <p>
-    Temps écoulé :
-    <span data-session-target="timer">0</span> secondes
-  </p>
+  <p>Temps écoulé : <span data-session-target="timer">0</span> secondes</p>
 
-  <!-- Statut -->
   <p id="status">En attente de la voix de l'élève…</p>
 
-  <!-- Formulaire d'arrêt -->
-  <%= form_with url: "/sessions/stop", method: :post, data: { turbo: false } do %>
-
+  <%= form_with url: "/sessions/stop", method: :post, data: { turbo: false }, html: { id: "stop-form" } do %>
     <%= hidden_field_tag :session_id, @session.id %>
+    <%= hidden_field_tag :duration_seconds, 0, data: { session_target: "duration" } %>
+    <%= hidden_field_tag :aborted, false, data: { session_target: "aborted" } %>
+    <%= hidden_field_tag :audio_file, "", id: "audio-file-field" %>
 
-    <%= hidden_field_tag :duration_seconds,
-                         0,
-                         data: { session_target: "duration" } %>
+    <button type="button" id="start-button" data-action="click->session#startRecording">
+      🎤 Démarrer
+    </button>
 
-    <%= hidden_field_tag :aborted,
-                         false,
-                         data: { session_target: "aborted" } %>
+    <button type="button" id="stop-button" data-action="click->session#manualStop" disabled>
+      ❌ Arrêter
+    </button>
 
-    <%= submit_tag "Arrêter",
-      data: { session_target: "stopButton", action: "click->session#stop" } %>
-
+    <button type="button" id="finish-button" data-action="click->session#finishManually" style="display:none;">
+      ✅ Terminer
+    </button>
   <% end %>
 
-  <hr>
-
-  <!-- 🎤 Enregistrement audio Whisper -->
-  <h2>Enregistrement audio</h2>
-
-  <button id="start-record">🎤 Commencer l’enregistrement</button>
-  <button id="stop-record" disabled>⏹️ Arrêter</button>
-
-  <p id="audio-status"></p>
-
-  <h3>Transcription Whisper</h3>
-  <pre id="transcription"></pre>
-
 </div>
-
-<%= javascript_include_tag "session_audio" %>

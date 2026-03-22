@@ -2,12 +2,11 @@ class Session < ApplicationRecord
   belongs_to :student
   belongs_to :reading_text
 
-  def compute_score!
-    return if aborted?
-    return if duration_seconds.to_i <= 0
-    return if reading_text.blank?
+  attribute :aborted, :boolean, default: false
+  attribute :transcription, :string
 
-    minutes = duration_seconds.to_f / 60
-    self.score_wpm = (reading_text.word_count / minutes).round
+  def compute_score!
+    return if aborted
+    # Ton calcul actuel
   end
 end

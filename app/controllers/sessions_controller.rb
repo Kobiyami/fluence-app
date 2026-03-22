@@ -21,15 +21,27 @@ end
   end
 
   def stop
-    @session = Session.find(params[:session_id])
-    @session.duration_seconds = params[:duration_seconds].to_i
-    @session.aborted = params[:aborted] == "true"
+  @session = Session.find(params[:session_id])
+  @session.duration_seconds = params[:duration_seconds].to_i
+  @session.aborted = params[:aborted] == "true"
 
-    @session.compute_score!
-    @session.save!
+  if !@session.aborted && params[:audio_file].present?
+    audio_data = params[:audio_file].split(",").last
+    audio_binary = Base64.decode64(audio_data)
 
-    redirect_to session_path(@session)
+    path = Rails.root.join("tmp", "session_#{@session.id}.webm")
+    File.binwrite(path, audio_binary)
+
+    text = WhisperTranscriber.new(path).call
+    @session.transcription = text
   end
+
+  @session.compute_score!
+  @session.save!
+
+  redirect_to session_path(@session)
+end
+
 
   def show
     @session = Session.find(params[:id])

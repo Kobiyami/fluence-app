@@ -8,3 +8,41 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+ /* Boutons de session */
+#start-button {
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+#stop-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#finish-button {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#stop-button:disabled,
+#start-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reading-text-block {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ccc;
+}
