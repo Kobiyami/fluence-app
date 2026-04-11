@@ -1,16 +1,7 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
 puts "Cleaning database..."
+Session.destroy_all
 Student.destroy_all
 ReadingText.destroy_all
-Session.destroy_all
 
 puts "Creating students..."
 
@@ -21,10 +12,7 @@ students = [
   { first_name: "David", last_name: "Leroy", code: "4567" }
 ]
 
-students.each do |data|
-  Student.create!(data)
-end
-
+students.each { |data| Student.create!(data) }
 puts "Students created!"
 
 puts "Creating texts..."
@@ -32,34 +20,27 @@ puts "Creating texts..."
 texts = [
   {
     title: "Le renard et le corbeau",
-    content: "Maître Corbeau, sur un arbre perché, tenait en son bec un fromage...",
+    content: "Maître Corbeau, sur un arbre perché, tenait en son bec un fromage.",
     word_count: 14
   },
   {
     title: "Le lièvre et la tortue",
-    content: "Rien ne sert de courir ; il faut partir à point...",
+    content: "Rien ne sert de courir ; il faut partir à point.",
     word_count: 12
   },
   {
     title: "Le petit chat",
-    content: "Le petit chat joue dans le jardin et poursuit un papillon...",
+    content: "Le petit chat joue dans le jardin et poursuit un papillon.",
     word_count: 15
+  },
+  {
+    title: "Le cirque",
+    content: "Ce soir, Lisa et Amélie vont voir un spectacle de cirque avec leurs parents. Amélie espère qu'il y aura des animaux, des lions par exemple, ou même un éléphant. Lisa elle, attend avec impatience de voir les numéros des clowns. Il y a sûrement des clowns, dit papa, mais je ne suis pas certain que ce cirque ait un éléphant. Il paie les entrées, et la famille va s'installer au premier rang. Le spectacle commence par le numéro des acrobates qui font de grandes pyramides. Ensuite viennent les clowns. Lisa est enchantée. Pendant l'entracte, les filles se régalent avec de la bonne barbe à papa. Le spectacle reprend avec les trapézistes, et enfin les animaux tant attendus par Amélie. Il n'y a pas d'éléphant, mais un lion et des chevaux blancs qui galopent autour de la piste et se cabrent quand le dresseur le leur demande. Amélie et Lisa ont passé une très bonne soirée.",
+    word_count: 162
   }
 ]
 
-texts.each do |data|
-  ReadingText.create!(data)
-end
-
+texts.each { |data| ReadingText.create!(data) }
 puts "Texts created!"
 
-puts "Creating a test session..."
-
-Session.create!(
-  student: Student.first,
-  reading_text: ReadingText.first,
-  duration_seconds: 45,
-  score_wpm: (ReadingText.first.word_count / (45.0 / 60)).round
-)
-
-puts "Test session created!"
+puts "Done!"
