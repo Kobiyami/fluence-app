@@ -1,0 +1,109 @@
+
+body {
+  background-color: #F0F4FF;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.navbar-fluence {
+  background: linear-gradient(135deg, #4A90D9, #9B59B6);
+  padding: 12px 24px;
+}
+
+.navbar-fluence .navbar-brand {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.card-fluence {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.card-fluence:hover {
+  transform: translateY(-4px);
+}
+
+#start-button {
+  background-color: #4A90D9;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(74,144,217,0.4);
+}
+
+#stop-button {
+  background-color: #D9534F;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(217,83,79,0.4);
+}
+
+#finish-button {
+  background-color: #5CB85C;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(92,184,92,0.4);
+}
+
+#start-button:disabled,
+#stop-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-card {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  text-align: left;
+  cursor: pointer;
+  display: block;
+}
+
+.btn-card:focus,
+.btn-card:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.reading-text-block {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  font-size: 22px;
+  line-height: 2;
+}
+
+.timer-display {
+  font-size: 48px;
+  font-weight: bold;
+  color: #4A90D9;
+}
+
+.score-mclm {
+  font-size: 72px;
+  font-weight: bold;
+  color: #5CB85C;
+}
+
+.word-correct { color: #2E7D32; font-weight: bold; }
+.word-error   { color: #C62828; text-decoration: underline wavy red; }
+.word-omitted { color: #B0BEC5; text-decoration: line-through; }

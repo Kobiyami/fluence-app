@@ -1,15 +1,22 @@
-<h1>Liste des élèves</h1>
+<div class="text-center mb-5">
+  <h1 class="display-4 fw-bold" style="color: #4A90D9;">📚 FluenceApp</h1>
+  <p class="lead text-muted">Choisis ton prénom pour commencer !</p>
+</div>
 
-<ul>
+<div class="d-flex flex-wrap justify-content-center gap-3">
   <% @students.each do |student| %>
-    <li>
-      <%= link_to "#{student.first_name} #{student.last_name}", student_path(student) %>
-    </li>
+    <%= link_to student_path(student), class: "text-decoration-none" do %>
+      <div class="card card-fluence text-center p-4" style="width: fit-content; min-width: 120px;">
+        <div style="font-size: 48px;">🧒</div>
+        <div class="fw-bold mt-2" style="color: #4A90D9;">
+          <%= student.first_name %>
+        </div>
+        <div class="text-muted small"><%= student.last_name %></div>
+      </div>
+    <% end %>
   <% end %>
-</ul>
+</div>
 
-<hr>
-
-<p>
-  <%= link_to "Se connecter avec un code", login_path %>
-</p>
+<div class="text-center mt-4">
+  <%= link_to "🔑 Se connecter avec un code", login_path, class: "btn btn-outline-secondary" %>
+</div>

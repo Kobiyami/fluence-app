@@ -40,3 +40,7 @@
 /tmp/*.mp3
 /tmp/*.txt
 venv/
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
+app/assets/builds/

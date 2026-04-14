@@ -1,34 +1,50 @@
-<p><%= link_to "Changer d’élève", students_path %></p>
-
-<h1><%= @student.first_name %> <%= @student.last_name %></h1>
-
-<p>Code élève : <%= @student.code %></p>
-
-<h2>Dernières séances :</h2>
-
-<ul>
-  <% @student.sessions.order(created_at: :desc).each do |session| %>
-  <li>
-    <%= link_to "Séance du #{session.created_at.strftime('%d/%m/%Y %H:%M')}", session_path(session) %>
-    — <em><%= session.reading_text.title %></em>
-    <% if session.aborted? %>
-      — <strong>abandon</strong>
-    <% elsif session.mclm_score.present? %>
-    — <%= session.mclm_score %> MCLM
-    <% else %>
-      — (pas de score)
-    <% end %>
-  </li>
-<% end %>
-</ul>
-
-<h2>Choisir un texte :</h2>
-
-<ul>
-  <% ReadingText.all.each do |text| %>
-
-    <li>
-      <%= link_to text.title, new_session_path(student_id: @student.id, reading_text_id: text.id) %>
-    </li>
+<div class="d-flex align-items-center mb-4">
+  <%= link_to students_path, class: "btn btn-outline-secondary btn-sm me-3" do %>
+    ← Changer d'élève
   <% end %>
-</ul>
+  <h1 class="mb-0" style="color: #4A90D9;">
+    🧒 <%= @student.first_name %> <%= @student.last_name %>
+  </h1>
+</div>
+
+<h2 class="h4 mb-3">📖 Choisir un texte à lire :</h2>
+<div class="d-flex flex-wrap gap-3 mb-5">
+  <% ReadingText.all.each do |text| %>
+    <form action="<%= sessions_start_path %>" method="post" data-turbo="false">
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      <input type="hidden" name="student_id" value="<%= @student.id %>">
+      <input type="hidden" name="reading_text_id" value="<%= text.id %>">
+      <button type="submit" class="btn-card">
+        <div class="card card-fluence p-3 text-start" style="width: fit-content;">
+          <div class="fw-bold" style="color: #4A90D9;">📄 <%= text.title %></div>
+          <div class="text-muted small mt-1"><%= text.word_count %> mots</div>
+        </div>
+      </button>
+    </form>
+  <% end %>
+</div>
+
+<h2 class="h4 mb-3">📊 Dernières séances :</h2>
+<% if @student.sessions.empty? %>
+  <p class="text-muted">Aucune séance pour le moment.</p>
+<% else %>
+  <div class="d-flex flex-wrap gap-3">
+    <% @student.sessions.order(created_at: :desc).each do |s| %>
+      <%= link_to session_path(s), class: "text-decoration-none" do %>
+        <div class="card card-fluence p-3" style="width: fit-content;">
+          <div class="fw-bold"><%= s.reading_text.title %></div>
+          <div class="text-muted small"><%= s.created_at.strftime('%d/%m/%Y %H:%M') %></div>
+          <div class="mt-2">
+            <% if s.aborted? %>
+              <span class="badge bg-warning text-dark">⚠️ Abandon</span>
+            <% elsif s.mclm_score.present? %>
+              <span class="badge bg-success">✅ <%= s.mclm_score %> MCLM</span>
+            <% else %>
+              <span class="badge bg-secondary">— pas de score</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

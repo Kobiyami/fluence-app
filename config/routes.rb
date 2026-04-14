@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   post "/login", to: "students#login_check"
   post "/transcriptions", to: "transcriptions#create"
 
-  resources :sessions, only: [:new, :show]
-  post "/sessions/start", to: "sessions#start"
+  post "/sessions/start", to: "sessions#start", as: "sessions_start"
   post "/sessions/stop",  to: "sessions#stop"
+  resources :sessions, only: [:show]
 end
