@@ -6,7 +6,7 @@ module Rails
 end
 require "logger"
 
-require_relative "app/services/fluency_scorer"
+require_relative "../app/services/fluency_scorer"
 
 def run_case(name, reference, transcription, duration, expected)
   scorer = FluencyScorer.new(reference, transcription, duration)

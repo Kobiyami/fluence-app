@@ -90,7 +90,7 @@ end
   end
 
   def compute_mclm(correct, errors, omissions)
-    raw = [correct - errors - omissions, 0].max
+    raw = [correct, 0].max
     if @duration_seconds > 0 && @duration_seconds < 60
       (raw * 60.0 / @duration_seconds).round
     else
