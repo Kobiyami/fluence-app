@@ -46,3 +46,6 @@ app/services/piper/piper/
 app/services/piper/*.onnx
 app/services/piper/*.onnx.json
 app/services/piper/test.wav
+
+# Binaire whisper.cpp (à recompiler/retélécharger localement)
+app/services/whisper/whisper
