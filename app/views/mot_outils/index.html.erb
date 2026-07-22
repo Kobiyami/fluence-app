@@ -1,0 +1,33 @@
+<div class="dashboard">
+  <p><%= link_to "← Tableau de bord", students_path, class: "back-link" %></p>
+
+  <p class="eyebrow">Gestion des exercices</p>
+  <h1>Mots outils</h1>
+
+  <% if notice %>
+    <p class="login-error login-error--success"><%= notice %></p>
+  <% end %>
+
+  <%= form_with model: @mot_outil, url: mot_outils_path, class: "login-form login-form--inline" do |f| %>
+    <% if @mot_outil.errors.any? %>
+      <p class="login-error"><%= @mot_outil.errors.full_messages.to_sentence %></p>
+    <% end %>
+    <%= f.text_field :text, placeholder: "Nouveau mot outil", class: "login-input" %>
+    <%= f.submit "Ajouter", class: "btn-reading btn-reading--start" %>
+  <% end %>
+
+  <p class="eyebrow" style="margin-top: 32px;">Mots déjà ajoutés (<%= @mot_outils.count %>)</p>
+  <ul class="roster-list">
+    <% @mot_outils.each do |mot| %>
+      <li class="roster-row">
+  <span class="roster-name"><%= mot.text %></span>
+  <div class="roster-row-right">
+    <span class="roster-last-session">Ajouté le <%= mot.created_at.strftime("%d/%m/%Y") %></span>
+    <%= button_to "Supprimer", mot_outil_path(mot), method: :delete,
+          data: { turbo_confirm: "Supprimer « #{mot.text} » ?" },
+          class: "btn-delete" %>
+  </div>
+</li>
+    <% end %>
+  </ul>
+</div>

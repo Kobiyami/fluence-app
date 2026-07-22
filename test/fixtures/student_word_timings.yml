@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  student: one
+  mot_outil: one
+  allowed_time: 1
+  last_seen_at: 2026-07-21 21:55:16
+
+two:
+  student: two
+  mot_outil: two
+  allowed_time: 1
+  last_seen_at: 2026-07-21 21:55:16
