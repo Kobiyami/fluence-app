@@ -1,15 +1,20 @@
-<div data-controller="session">
+<div class="reading-screen" data-controller="session">
+  <p class="eyebrow">Lecture en cours</p>
 
-  <h1>Lecture en cours</h1>
-
-  <div class="reading-text-block">
+  <div class="reading-card">
     <h2><%= @reading_text.title %></h2>
-    <%= simple_format(@reading_text.content) %>
+    <div class="reading-body">
+      <%= simple_format(@reading_text.content) %>
+    </div>
   </div>
 
-  <p>Temps écoulé : <span data-session-target="timer">0</span> secondes</p>
-
-  <p id="status">En attente de la voix de l'élève…</p>
+  <div class="reading-status">
+    <div class="timer-display">
+      <span data-session-target="timer">0</span>
+      <span class="timer-unit">secondes</span>
+    </div>
+    <p id="status" class="status-message">En attente de la voix de l'élève…</p>
+  </div>
 
   <%= form_with url: "/sessions/stop", method: :post, data: { turbo: false }, html: { id: "stop-form" } do %>
     <%= hidden_field_tag :session_id, @session.id %>
@@ -17,17 +22,16 @@
     <%= hidden_field_tag :aborted, false, data: { session_target: "aborted" } %>
     <%= hidden_field_tag :audio_file, "", id: "audio-file-field" %>
 
-    <button type="button" id="start-button" data-action="click->session#startRecording">
-      🎤 Démarrer
-    </button>
-
-    <button type="button" id="stop-button" data-action="click->session#manualStop" disabled>
-      ❌ Arrêter
-    </button>
-
-    <button type="button" id="finish-button" data-action="click->session#finishManually" style="display:none;">
-      ✅ Terminer
-    </button>
+    <div class="reading-actions">
+      <button type="button" id="start-button" class="btn-reading btn-reading--start" data-action="click->session#startRecording">
+        <i class="ti ti-microphone"></i> Démarrer
+      </button>
+      <button type="button" id="stop-button" class="btn-reading btn-reading--stop" data-action="click->session#manualStop" disabled>
+        <i class="ti ti-x"></i> Arrêter
+      </button>
+      <button type="button" id="finish-button" class="btn-reading btn-reading--finish" style="display:none;" data-action="click->session#finishManually">
+        <i class="ti ti-check"></i> Terminer
+      </button>
+    </div>
   <% end %>
-
 </div>

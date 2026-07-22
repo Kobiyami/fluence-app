@@ -16,6 +16,11 @@ class SessionsController < ApplicationController
   end
 
   def stop
+    Rails.logger.info "=== STOP PARAMS ==="
+Rails.logger.info "aborted: #{params[:aborted]}"
+Rails.logger.info "duration: #{params[:duration_seconds]}"
+Rails.logger.info "audio_file present: #{params[:audio_file].present?}"
+Rails.logger.info "audio_file length: #{params[:audio_file]&.length}"
   @session = Session.find(params[:session_id])
   @session.duration_seconds = params[:duration_seconds].to_i
   @session.aborted = params[:aborted] == "true"

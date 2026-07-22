@@ -9,21 +9,22 @@ class FluencyScorer
   @duration_seconds = duration_seconds.to_f
 end
 
-  def call
-    alignment = align(@reference_words, @transcribed_words)
+def call
+  alignment = align(@reference_words, @transcribed_words)
 
-    correct   = alignment.count { |a| a[:status] == "correct" }
-    errors    = alignment.count { |a| a[:status] == "error" }
-    omissions = alignment.count { |a| a[:status] == "omitted" }
+  correct   = alignment.count { |a| a[:status] == "correct" }
+  errors    = alignment.count { |a| a[:status] == "error" }
+  omissions = alignment.count { |a| a[:status] == "omitted" }
 
-    {
-      word_count_correct:   correct,
-      word_count_errors:    errors,
-      word_count_omissions: omissions,
-      mclm_score:           compute_mclm(correct, errors, omissions),
-      word_alignment:       alignment
-    }
-  end
+  {
+    word_count_correct:   correct,
+    word_count_errors:    errors,
+    word_count_omissions: omissions,
+    mclm_score:           compute_mclm(correct, errors, omissions),
+    completion_rate:      compute_completion(correct, errors),
+    word_alignment:       alignment
+  }
+end
 
   private
 
@@ -96,5 +97,11 @@ end
     else
       raw
     end
+  end
+  
+  def compute_completion(correct, errors)
+  return 0 if @reference_words.empty?
+
+  ((correct + errors).to_f / @reference_words.length * 100).round
   end
 end

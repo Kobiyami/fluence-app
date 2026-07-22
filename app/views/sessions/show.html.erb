@@ -1,13 +1,34 @@
-<h1>Résultats</h1>
+<div class="reading-screen">
+  <p class="eyebrow">Résultats</p>
 
-<p>Élève : <%= @session.student.first_name %></p>
-<p>Texte : <%= @session.reading_text.title %></p>
+  <div class="results-card">
+    <div class="results-meta">
+      <p><strong>Élève :</strong> <%= @session.student.first_name %></p>
+      <p><strong>Texte :</strong> <%= @session.reading_text.title %></p>
+      <p><strong>Durée :</strong> <%= @session.duration_seconds %> secondes</p>
+    </div>
 
-<p>Durée : <%= @session.duration_seconds %> secondes</p>
-<p>Score MCLM : <%= @session.mclm_score %> mots/minute</p>
+    <% if @session.aborted? %>
+      <div class="score-block score-block--muted">
+        <p class="score-label">Lecture interrompue</p>
+        <p class="score-note">Aucun score n'a été calculé pour cette séance.</p>
+      </div>
+    <% elsif @session.completion_rate.present? && @session.completion_rate < 50 %>
+      <div class="score-block score-block--warning">
+        <p class="score-value"><%= @session.mclm_score %> <span>MCLM</span></p>
+        <p class="score-note">
+          ⚠️ Seulement <%= @session.completion_rate %>% du texte a été lu — ce score n'est pas représentatif de la fluence réelle de l'élève.
+        </p>
+      </div>
+    <% else %>
+      <div class="score-block score-block--success">
+        <p class="score-value"><%= @session.mclm_score %> <span>MCLM</span></p>
+        <p class="score-note">
+          <%= @session.completion_rate %>% du texte lu
+        </p>
+      </div>
+    <% end %>
+  </div>
 
-<hr>
-
-<p>
-  <%= link_to "Retour à l'élève", student_path(@session.student) %>
-</p>
+  <p><%= link_to "← Retour à l'élève", student_path(@session.student), class: "back-link" %></p>
+</div>

@@ -100,3 +100,17 @@ run_case(
   60.0,
   { correct: 6, errors: 0, omissions: 0 }
 )
+
+# Cas G — lecture interrompue tôt (filoutage), teste completion_rate
+scorer = FluencyScorer.new(
+  "Le chat noir dort sur le tapis rouge de la maison",
+  "Le chat noir",
+  2.0
+)
+result = scorer.call
+puts "=" * 60
+puts "CAS : Lecture interrompue tôt (3 mots sur 11)"
+puts "-" * 60
+puts "MCLM : #{result[:mclm_score]}"
+puts "Completion : #{result[:completion_rate]}%"
+puts result[:completion_rate] < 50 ? ">>> COMPLETION OK (faible, comme attendu)" : ">>> PROBLEME"

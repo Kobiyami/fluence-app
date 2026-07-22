@@ -1,34 +1,56 @@
-<p><%= link_to "Changer d’élève", students_path %></p>
+<div class="dashboard">
+  <p><%= link_to "← Changer d'élève", students_path, class: "back-link" %></p>
 
-<h1><%= @student.first_name %> <%= @student.last_name %></h1>
+  <div class="student-header">
+    <div class="avatar avatar--lg"><%= @student.first_name[0] %><%= @student.last_name[0] %></div>
+    <div>
+      <h1><%= @student.name %></h1>
+      <p class="student-code">Code élève : <%= @student.code %></p>
+    </div>
+  </div>
 
-<p>Code élève : <%= @student.code %></p>
-
-<h2>Dernières séances :</h2>
-
-<ul>
-  <% @student.sessions.order(created_at: :desc).each do |session| %>
-  <li>
-    <%= link_to "Séance du #{session.created_at.strftime('%d/%m/%Y %H:%M')}", session_path(session) %>
-    — <em><%= session.reading_text.title %></em>
-    <% if session.aborted? %>
-      — <strong>abandon</strong>
-    <% elsif session.mclm_score.present? %>
-    — <%= session.mclm_score %> MCLM
-    <% else %>
-      — (pas de score)
-    <% end %>
-  </li>
-<% end %>
-</ul>
-
-<h2>Choisir un texte :</h2>
-
-<ul>
-  <% ReadingText.all.each do |text| %>
-
-    <li>
-      <%= link_to text.title, new_session_path(student_id: @student.id, reading_text_id: text.id) %>
-    </li>
+  <% if @student.sessions.any? %>
+    <section>
+      <p class="eyebrow">Dernières séances</p>
+      <ul class="session-list">
+        <% @student.sessions.order(created_at: :desc).limit(5).each do |session| %>
+          <li class="session-row">
+            <%= link_to session_path(session), class: "session-link" do %>
+              <span class="session-date"><%= session.created_at.strftime('%d/%m/%Y %H:%M') %></span>
+              <span class="session-text"><%= session.reading_text.title %></span>
+            <% end %>
+            <% if session.aborted? %>
+              <span class="badge badge--muted">Abandon</span>
+            <% elsif session.mclm_score.present? %>
+              <span class="badge badge--score"><%= session.mclm_score %> MCLM</span>
+            <% else %>
+              <span class="badge badge--muted">Pas de score</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </section>
   <% end %>
-</ul>
+
+  <section>
+    <p class="eyebrow">Choisir un texte</p>
+    <ul class="text-grid">
+      <% ReadingText.all.each do |text| %>
+        <li>
+          <%= link_to new_session_path(student_id: @student.id, reading_text_id: text.id), class: "text-card" do %>
+            <i class="ti ti-book-2"></i>
+            <span><%= text.title %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section>
+  <p class="eyebrow">Mots outils</p>
+  <%= link_to play_mot_outils_path(student_id: @student.id), class: "text-card" do %>
+    <i class="ti ti-tools"></i>
+    <span>Commencer la séquence</span>
+  <% end %>
+</section>
+</div>

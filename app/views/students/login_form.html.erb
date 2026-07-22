@@ -1,2 +1,18 @@
-<h1>Students#login_form</h1>
-<p>Find me in app/views/students/login_form.html.erb</p>
+<div class="reading-screen">
+  <div class="login-card">
+    <div class="ready-icon"><i class="ti ti-key"></i></div>
+    <h1>Connexion élève</h1>
+    <p class="ready-student">Entre ton code personnel</p>
+
+    <% if flash[:alert] %>
+      <p class="login-error"><%= flash[:alert] %></p>
+    <% end %>
+
+    <%= form_with url: login_path, method: :post, local: true, class: "login-form" do %>
+      <%= text_field_tag :code, nil, placeholder: "Code élève", class: "login-input", autofocus: true, inputmode: "numeric" %>
+      <%= submit_tag "Se connecter", class: "btn-reading btn-reading--start btn-reading--wide" %>
+    <% end %>
+
+    <%= link_to "← Retour à la liste des élèves", students_path, class: "back-link back-link--spaced" %>
+  </div>
+</div>

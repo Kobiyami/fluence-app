@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_22_161846) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_21_195516) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "mot_outils", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "text"
+    t.datetime "updated_at", null: false
+  end
 
   create_table "reading_texts", force: :cascade do |t|
     t.text "content"
@@ -24,6 +30,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_161846) do
 
   create_table "sessions", force: :cascade do |t|
     t.boolean "aborted", default: false, null: false
+    t.integer "completion_rate"
     t.datetime "created_at", null: false
     t.integer "duration_seconds"
     t.integer "mclm_score"
@@ -38,6 +45,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_161846) do
     t.index ["student_id"], name: "index_sessions_on_student_id"
   end
 
+  create_table "student_word_timings", force: :cascade do |t|
+    t.integer "allowed_time"
+    t.datetime "created_at", null: false
+    t.datetime "last_seen_at"
+    t.bigint "mot_outil_id", null: false
+    t.bigint "student_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mot_outil_id"], name: "index_student_word_timings_on_mot_outil_id"
+    t.index ["student_id"], name: "index_student_word_timings_on_student_id"
+  end
+
   create_table "students", force: :cascade do |t|
     t.string "code"
     t.datetime "created_at", null: false
@@ -48,4 +66,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_161846) do
 
   add_foreign_key "sessions", "reading_texts"
   add_foreign_key "sessions", "students"
+  add_foreign_key "student_word_timings", "mot_outils"
+  add_foreign_key "student_word_timings", "students"
 end
