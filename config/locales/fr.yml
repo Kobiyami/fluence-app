@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    attributes:
+      mot_outil:
+        text: "Mot"
+      reading_text:
+        title: "Titre"
+        content: "Contenu"

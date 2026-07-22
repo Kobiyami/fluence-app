@@ -1,28 +1,20 @@
-<h1><%= @reading_text.title %></h1>
+<div class="dashboard">
+  <p><%= link_to "← Textes de lecture", reading_texts_path, class: "back-link" %></p>
 
-<p><%= @reading_text.content %></p>
+  <p class="eyebrow">Modifier le texte</p>
 
-<p><strong><%= @reading_text.word_count %></strong> mots</p>
+  <% if @reading_text.errors.any? %>
+    <p class="login-error"><%= @reading_text.errors.full_messages.to_sentence %></p>
+  <% end %>
 
-<hr>
+  <%= form_with model: @reading_text, url: reading_text_path(@reading_text), method: :patch, class: "text-form" do |f| %>
+    <%= f.text_field :title, class: "login-input" %>
+    <%= f.text_area :content, class: "login-input text-area", rows: 8 %>
+    <p class="roster-last-session"><%= @reading_text.word_count %> mots</p>
+    <%= f.submit "Enregistrer", class: "btn-reading btn-reading--start" %>
+  <% end %>
 
-<h2>Lancer une séance</h2>
-
-<%= form_with url: "/sessions/start", method: :post, data: { turbo: false } do %>
-  <%= hidden_field_tag :reading_text_id, @reading_text.id %>
-
-  <p>
-    <%= label_tag :student_id, "Choisir un élève :" %><br>
-    <%= select_tag :student_id,
-          options_from_collection_for_select(Student.all, :id, :first_name),
-          prompt: "Sélectionner un élève" %>
-  </p>
-
-  <%= submit_tag "Commencer la séance" %>
-<% end %>
-
-<hr>
-
-<p>
-  <%= link_to "Retour aux textes", reading_texts_path %>
-</p>
+  <%= button_to "Supprimer ce texte", reading_text_path(@reading_text), method: :delete,
+        data: { turbo_confirm: "Supprimer « #{@reading_text.title} » ?" },
+        class: "btn-delete" %>
+</div>

@@ -1,16 +1,34 @@
-<h1>Textes disponibles</h1>
+<div class="dashboard">
+  <p><%= link_to "← Tableau de bord", students_path, class: "back-link" %></p>
 
-<ul>
-  <% @reading_texts.each do |text| %>
-    <li>
-      <%= link_to text.title, reading_text_path(text) %>
-      — <%= text.word_count %> mots
-    </li>
+  <p class="eyebrow">Gestion des exercices</p>
+  <h1>Textes de lecture</h1>
+
+  <% if notice %>
+    <p class="login-error login-error--success"><%= notice %></p>
   <% end %>
-</ul>
 
-<hr>
+  <%= form_with model: @reading_text, url: reading_texts_path, class: "text-form" do |f| %>
+    <% if @reading_text.errors.any? %>
+      <p class="login-error"><%= @reading_text.errors.full_messages.to_sentence %></p>
+    <% end %>
+    <%= f.text_field :title, placeholder: "Titre du texte", class: "login-input" %>
+    <%= f.text_area :content, placeholder: "Contenu du texte", class: "login-input text-area", rows: 5 %>
+    <%= f.submit "Ajouter", class: "btn-reading btn-reading--start" %>
+  <% end %>
 
-<p>
-  <%= link_to "Retour aux élèves", students_path %>
-</p>
+  <p class="eyebrow" style="margin-top: 32px;">Textes disponibles (<%= @reading_texts.count %>)</p>
+  <ul class="roster-list">
+    <% @reading_texts.each do |text| %>
+      <li class="roster-row">
+        <%= link_to text.title, reading_text_path(text), class: "session-link" %>
+        <div class="roster-row-right">
+          <span class="roster-last-session"><%= text.word_count %> mots</span>
+          <%= button_to "Supprimer", reading_text_path(text), method: :delete,
+                data: { turbo_confirm: "Supprimer « #{text.title} » ?" },
+                class: "btn-delete" %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>

@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root "students#index"
 
   resources :students, only: [:index, :show]
-  resources :reading_texts, only: [:index, :show]
+  resources :reading_texts, only: [:index, :show, :create, :update, :destroy]
   resources :mot_outils, only: [:index, :create, :destroy]
 
   get  "/login", to: "students#login_form"

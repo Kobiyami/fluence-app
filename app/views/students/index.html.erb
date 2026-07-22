@@ -5,13 +5,12 @@
       <h1>Mes élèves</h1>
     </div>
   </div>
-
-  <section class="exercise-types">
-    <div class="exercise-card exercise-card--active">
-      <i class="ti ti-book-2"></i>
-      <p class="exercise-title">Fluence de lecture</p>
-      <p class="exercise-desc">Lecture chronométrée d'un texte</p>
-    </div>
+<section class="exercise-types">
+  <%= link_to reading_texts_path, class: "exercise-card exercise-card--active" do %>
+  <i class="ti ti-book-2"></i>
+  <p class="exercise-title">Fluence de lecture</p>
+  <p class="exercise-desc">Gérer les textes</p>
+<% end %>
     <%= link_to mot_outils_path, class: "exercise-card exercise-card--active" do %>
   <i class="ti ti-tools"></i>
   <p class="exercise-title">Mots outils</p>
