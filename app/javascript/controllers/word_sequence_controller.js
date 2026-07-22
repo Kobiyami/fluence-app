@@ -6,23 +6,14 @@ export default class extends Controller {
 
   async connect() {
     this.index = 0
-    this.timings = []
-    this.audioChunks = []
-    this.currentWordRecorded = true
+    this.pendingUploads = []
+    this.results = []
 
     this.stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    this.mediaRecorder = new MediaRecorder(this.stream)
-    this.mediaRecorder.ondataavailable = e => this.audioChunks.push(e.data)
-    this.mediaRecorder.onstop = () => this.submitResults()
 
-    await new Promise(resolve => {
-  this.mediaRecorder.onstart = () => { this.recordingStart = performance.now(); resolve() }
-  this.mediaRecorder.start()
-})
-
-this.sessionStart = performance.now()
-this.startSessionTimer()
-this.playCurrent()
+    this.sessionStart = performance.now()
+    this.startSessionTimer()
+    this.playCurrent()
   }
 
   startSessionTimer() {
@@ -51,8 +42,8 @@ this.playCurrent()
       return
     }
 
-    this.currentWordStart = (performance.now() - this.recordingStart) / 1000
-    this.currentWordRecorded = false
+    this.currentWord = current
+    this.startRecordingCurrentWord()
 
     this.progressTarget.textContent = `Mot ${this.index + 1}`
 
@@ -70,17 +61,44 @@ this.playCurrent()
     this.timeout = setTimeout(() => this.nextWord(), current.allowed_time * 1000)
   }
 
-  nextWord() {
-    const currentEnd = (performance.now() - this.recordingStart) / 1000
-    const current = this.wordsValue[this.index]
+  startRecordingCurrentWord() {
+    this.currentChunks = []
+    this.currentRecorder = new MediaRecorder(this.stream)
+    this.currentRecorder.ondataavailable = e => this.currentChunks.push(e.data)
+    this.currentRecorder.start()
+  }
 
-    this.timings.push({
-      mot_outil_id: current.id,
-      text: current.text,
-      start: this.currentWordStart,
-      end: currentEnd
+  stopRecordingAndUpload(word) {
+    if (!this.currentRecorder || this.currentRecorder.state === "inactive") return
+
+    const recorder = this.currentRecorder
+    const chunks = this.currentChunks
+
+    const uploadPromise = new Promise((resolve) => {
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" })
+        const formData = new FormData()
+        formData.append("audio", blob, "word.webm")
+        formData.append("student_id", this.studentIdValue)
+        formData.append("mot_outil_id", word.id)
+
+        fetch("/mots_outils/transcribe_word", {
+          method: "POST",
+          headers: { "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content },
+          body: formData
+        })
+          .then(r => r.json())
+          .then(data => { this.results.push(data); resolve() })
+          .catch(() => resolve())
+      }
     })
-    this.currentWordRecorded = true
+
+    recorder.stop()
+    this.pendingUploads.push(uploadPromise)
+  }
+
+  nextWord() {
+    this.stopRecordingAndUpload(this.currentWord)
 
     this.wordTarget.classList.remove("word-slide-in")
     this.wordTarget.classList.add("word-slide-out")
@@ -95,11 +113,8 @@ this.playCurrent()
     if (this.timeout) clearTimeout(this.timeout)
     if (this.sessionTimeout) clearTimeout(this.sessionTimeout)
 
-    if (this.currentWordStart !== undefined && !this.currentWordRecorded) {
-      const currentEnd = (performance.now() - this.recordingStart) / 1000
-      const current = this.wordsValue[this.index]
-      this.timings.push({ mot_outil_id: current.id, text: current.text, start: this.currentWordStart, end: currentEnd })
-      this.currentWordRecorded = true
+    if (this.currentRecorder && this.currentRecorder.state !== "inactive") {
+      this.stopRecordingAndUpload(this.currentWord)
     }
 
     this.wordTarget.parentElement.style.display = "none"
@@ -108,37 +123,11 @@ this.playCurrent()
     this.doneTarget.style.display = "block"
     this.doneTarget.innerHTML = "<p>Analyse en cours…</p>"
 
-    if (this.mediaRecorder && this.mediaRecorder.state !== "inactive") {
-      this.mediaRecorder.stop()
-    } else {
-      this.submitResults()
-    }
+    Promise.all(this.pendingUploads).then(() => this.showSummary())
   }
 
-  submitResults() {
-    const blob = new Blob(this.audioChunks, { type: "audio/webm" })
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      fetch("/mots_outils/finish", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-          student_id: this.studentIdValue,
-          audio_file: reader.result,
-          word_timings: this.timings
-        })
-      })
-        .then(r => r.json())
-        .then(data => this.showSummary(data))
-    }
-    reader.readAsDataURL(blob)
-  }
-
-  showSummary(data) {
-    const wrongWords = data.results.filter(r => !r.correct)
+  showSummary() {
+    const wrongWords = this.results.filter(r => !r.correct)
 
     let wordsHtml = ""
     if (wrongWords.length > 0) {

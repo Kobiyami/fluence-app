@@ -30,7 +30,7 @@ class WhisperTranscriber
     # 3. Lancer Whisper pour écraser ce fichier
   success = system(
   @whisper_bin, "-m", @model_path, "-f", wav,
-  "-l", "fr", "-t", "12", "-bs", "1", "-bo", "1", "-nf", "-otxt", "-of", base
+  "-l", "fr", "-t", "4", "-bs", "1", "-bo", "1", "-nf", "-otxt", "-of", base
 )
   Rails.logger.info "Whisper exit success: #{success}"
   Rails.logger.info "Fichier généré : #{File.exist?(output_path)}"
