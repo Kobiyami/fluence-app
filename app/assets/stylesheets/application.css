@@ -741,3 +741,32 @@ a.exercise-card:hover {
 .btn-listen:hover {
   background: var(--accent-soft);
 }
+
+.analyzing {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.analyzing-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  animation: spin-compass 1.8s ease-in-out infinite;
+}
+
+@keyframes spin-compass {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+
+.analyzing-text {
+  font-size: 14px;
+  color: var(--ink-secondary);
+}

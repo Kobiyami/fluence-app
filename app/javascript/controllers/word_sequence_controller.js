@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["word", "timerFill", "sessionTimerFill", "progress", "done"]
+  static targets = ["word", "timerFill", "sessionTimerFill", "progress", "done", "analyzingText"]
   static values = { words: Array, sessionDuration: Number, studentId: Number }
 
   async connect() {
@@ -23,6 +23,17 @@ export default class extends Controller {
 
     this.sessionTimeout = setTimeout(() => this.finish(), this.sessionDurationValue * 1000)
   }
+
+startAnalyzingMessages() {
+  const messages = ["On regarde ça...", "Presque prêt...", "On compte les points..."]
+  let i = 0
+  this.analyzingInterval = setInterval(() => {
+    i = (i + 1) % messages.length
+    if (this.hasAnalyzingTextTarget) {
+      this.analyzingTextTarget.textContent = messages[i]
+    }
+  }, 1500)
+}
 
   elapsedSeconds() {
     return (performance.now() - this.sessionStart) / 1000
@@ -121,7 +132,13 @@ export default class extends Controller {
     this.element.querySelectorAll(".word-timer-track").forEach(el => el.style.display = "none")
     this.progressTarget.style.display = "none"
     this.doneTarget.style.display = "block"
-    this.doneTarget.innerHTML = "<p>Analyse en cours…</p>"
+    this.doneTarget.innerHTML = `
+  <div class="analyzing">
+    <div class="analyzing-icon"><i class="ti ti-compass"></i></div>
+    <p class="analyzing-text" data-word-sequence-target="analyzingText">On regarde ça...</p>
+  </div>
+`
+this.startAnalyzingMessages()
 
     Promise.all(this.pendingUploads).then(() => this.showSummary())
   }
@@ -130,6 +147,7 @@ export default class extends Controller {
     const wrongWords = this.results.filter(r => !r.correct)
 
     let wordsHtml = ""
+    if (this.analyzingInterval) clearInterval(this.analyzingInterval)
     if (wrongWords.length > 0) {
       wordsHtml = `
         <p class="word-progress">À revoir :</p>

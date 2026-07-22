@@ -21,7 +21,10 @@ class MotOutilExercisesController < ApplicationController
 
     wav_path = "#{audio_path}.wav"
     system("ffmpeg", "-y", "-i", audio_path.to_s, "-ar", "16000", "-ac", "1", wav_path, out: File::NULL, err: File::NULL)
-
+if silent?(wav_path)
+  render json: { mot_outil_id: mot_outil.id, text: mot_outil.text, correct: false, heard: "(rien entendu)" }
+  return
+end
     transcription = WhisperTranscriber.new(wav_path, model: :small).call
     correct = levenshtein(normalize(transcription), normalize(mot_outil.text)) <= 1
 
@@ -66,4 +69,11 @@ end
   end
   costs[b.length]
 end
+
+def silent?(wav_path)
+  output = `ffmpeg -i #{wav_path} -af volumedetect -f null - 2>&1`
+  match = output.match(/mean_volume:\s*(-?\d+\.?\d*)\s*dB/)
+  match && match[1].to_f < -40.0
+end
+
 end
