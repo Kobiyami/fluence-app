@@ -1,0 +1,30 @@
+<div class="reading-screen">
+  <p><%= link_to "← Retour", student_path(@student), class: "back-link" %></p>
+  <p class="eyebrow">Mots outils</p>
+
+  <div class="word-stage"
+     data-controller="word-sequence"
+     data-word-sequence-words-value="<%= @word_sequence.to_json %>"
+     data-word-sequence-session-duration-value="60"
+     data-word-sequence-student-id-value="<%= @student.id %>">
+
+  <div class="word-timer-track word-timer-track--session">
+    <div class="word-timer-fill word-timer-fill--session" data-word-sequence-target="sessionTimerFill"></div>
+  </div>
+
+  <div class="word-timer-track">
+    <div class="word-timer-fill" data-word-sequence-target="timerFill"></div>
+  </div>
+
+  <div class="word-viewport">
+    <div class="word-current" data-word-sequence-target="word"></div>
+  </div>
+
+  <p class="word-progress" data-word-sequence-target="progress"></p>
+
+  <div class="word-done" data-word-sequence-target="done" style="display:none;">
+    <i class="ti ti-check"></i>
+    <p>Séquence terminée !</p>
+    <%= link_to "Retour au profil", student_path(@student), class: "btn-reading btn-reading--start" %>
+  </div>
+</div>
