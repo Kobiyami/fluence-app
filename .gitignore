@@ -49,3 +49,4 @@ app/services/piper/test.wav
 
 # Binaire whisper.cpp (à recompiler/retélécharger localement)
 app/services/whisper/whisper
+.claude/

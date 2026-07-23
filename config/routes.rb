@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get  "/login", to: "students#login_form"
   get "mots_outils/play", to: "mot_outil_exercises#play", as: :play_mot_outils
   get "mots_outils/pronounce", to: "mot_outil_exercises#pronounce"
+  get "suivi", to: "stats#index"
   post "mots_outils/transcribe_word", to: "mot_outil_exercises#transcribe_word"
   post "/login", to: "students#login_check"
   post "/transcriptions", to: "transcriptions#create"

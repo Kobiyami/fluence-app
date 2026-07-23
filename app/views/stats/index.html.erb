@@ -1,0 +1,54 @@
+<div class="dashboard">
+  <p><%= link_to "← Tableau de bord", students_path, class: "back-link" %></p>
+
+  <p class="eyebrow">Suivi</p>
+  <h1>Progression des élèves</h1>
+
+  <% @students.each do |student| %>
+    <section class="stats-student">
+      <h2><%= student.name %></h2>
+
+      <h3 class="stats-subtitle">Fluence de lecture</h3>
+      <% sessions = student.sessions.where.not(mclm_score: nil).order(created_at: :desc).limit(10) %>
+      <% if sessions.any? %>
+        <table class="stats-table">
+          <thead>
+            <tr><th>Date</th><th>Texte</th><th>MCLM</th><th>% lu</th></tr>
+          </thead>
+          <tbody>
+            <% sessions.each do |s| %>
+              <tr>
+                <td><%= s.created_at.strftime("%d/%m %H:%M") %></td>
+                <td><%= s.reading_text.title %></td>
+                <td><%= s.mclm_score %></td>
+                <td><%= s.completion_rate %>%</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="roster-last-session">Aucune séance de lecture.</p>
+      <% end %>
+
+      <h3 class="stats-subtitle">Mots outils</h3>
+      <% timings = student.student_word_timings.order(allowed_time: :asc) %>
+      <% if timings.any? %>
+        <table class="stats-table">
+          <thead>
+            <tr><th>Mot</th><th>Temps actuel</th></tr>
+          </thead>
+          <tbody>
+            <% timings.each do |t| %>
+              <tr>
+                <td><%= t.mot_outil.text %></td>
+                <td><%= t.allowed_time %>s</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="roster-last-session">Aucun mot outil pratiqué.</p>
+      <% end %>
+    </section>
+  <% end %>
+</div>

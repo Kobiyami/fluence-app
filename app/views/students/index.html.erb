@@ -16,11 +16,11 @@
   <p class="exercise-title">Mots outils</p>
   <p class="exercise-desc">Gérer la liste des mots</p>
 <% end %>
-    <div class="exercise-card exercise-card--soon">
-      <i class="ti ti-abc"></i>
-      <p class="exercise-title">Mots inexistants</p>
-      <p class="exercise-desc">Bientôt disponible</p>
-    </div>
+    <%= link_to suivi_path, class: "exercise-card exercise-card--active" do %>
+  <i class="ti ti-chart-line"></i>
+  <p class="exercise-title">Suivi</p>
+  <p class="exercise-desc">Voir la progression</p>
+<% end %>
   </section>
 
   <section class="roster">
