@@ -32,6 +32,8 @@ end
       t.allowed_time = StudentWordTiming::DEFAULT_ALLOWED_TIME
     end
 
+    StudentWordAttempt.create!(student: student, mot_outil: mot_outil, correct: correct, allowed_time: wt.allowed_time)
+
     if correct
       wt.register_success!
     else

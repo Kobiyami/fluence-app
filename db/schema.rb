@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_23_091449) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_23_134144) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -47,6 +47,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_091449) do
     t.index ["student_id"], name: "index_sessions_on_student_id"
   end
 
+  create_table "student_word_attempts", force: :cascade do |t|
+    t.integer "allowed_time"
+    t.boolean "correct"
+    t.datetime "created_at", null: false
+    t.bigint "mot_outil_id", null: false
+    t.bigint "student_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mot_outil_id"], name: "index_student_word_attempts_on_mot_outil_id"
+    t.index ["student_id"], name: "index_student_word_attempts_on_student_id"
+  end
+
   create_table "student_word_timings", force: :cascade do |t|
     t.integer "allowed_time"
     t.datetime "created_at", null: false
@@ -68,6 +79,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_091449) do
 
   add_foreign_key "sessions", "reading_texts"
   add_foreign_key "sessions", "students"
+  add_foreign_key "student_word_attempts", "mot_outils"
+  add_foreign_key "student_word_attempts", "students"
   add_foreign_key "student_word_timings", "mot_outils"
   add_foreign_key "student_word_timings", "students"
 end
