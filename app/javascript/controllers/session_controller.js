@@ -11,21 +11,22 @@ export default class extends Controller {
   }
 
   async startRecording() {
-    this.stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    this.mediaRecorder = new MediaRecorder(this.stream)
+  this.stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+  this.mediaRecorder = new MediaRecorder(this.stream)
 
-    this.mediaRecorder.ondataavailable = e => this.audioChunks.push(e.data)
-    this.mediaRecorder.onstop = () => this.handleAudioStop()
+  this.mediaRecorder.ondataavailable = e => this.audioChunks.push(e.data)
+  this.mediaRecorder.onstop = () => this.handleAudioStop()
 
-    this.setupSpeechRecognition()
-    this.startListening()
-    this.startNoSpeechTimeout()
+  this.setupSpeechRecognition()
+  this.startListening()
+  this.startNoSpeechTimeout()
 
-    document.getElementById("start-button").disabled = true
-    document.getElementById("stop-button").disabled = false
-    document.getElementById("status").textContent = "Parle quand tu es prêt…"
-  }
+  this.mediaRecorder.start()
 
+  document.getElementById("start-button").disabled = true
+  document.getElementById("stop-button").disabled = false
+  document.getElementById("status").textContent = "Parle quand tu es prêt…"
+}
   setupSpeechRecognition() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
     this.recognition = new SR()
@@ -53,7 +54,6 @@ export default class extends Controller {
   this.speechStarted = true
   clearTimeout(this.noSpeechTimeout)
   this.startTime = performance.now()
-  this.mediaRecorder.start()
   document.getElementById("status").textContent = "Enregistrement en cours…"
 
   // ✅ Afficher le bouton Terminer

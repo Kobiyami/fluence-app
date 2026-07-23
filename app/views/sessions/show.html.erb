@@ -1,34 +1,52 @@
 <div class="reading-screen">
-  <p class="eyebrow">Résultats</p>
+  <% if @session.status == "processing" %>
+    <meta http-equiv="refresh" content="4">
+    <p class="eyebrow">Résultats</p>
+    <div class="results-card">
+      <div class="analyzing">
+        <div class="analyzing-icon"><i class="ti ti-compass"></i></div>
+        <p class="analyzing-text">Analyse de la lecture en cours...</p>
+      </div>
+    </div>
+    <p><%= link_to "← Retour au tableau de bord", students_path, class: "back-link", data: { turbo: false } %></p>
+    <p class="word-progress">Tu peux naviguer ailleurs, cette page se mettra à jour toute seule.</p>
+  <% else %>
+    <p class="eyebrow">Résultats</p>
 
-  <div class="results-card">
-    <div class="results-meta">
-      <p><strong>Élève :</strong> <%= @session.student.first_name %></p>
-      <p><strong>Texte :</strong> <%= @session.reading_text.title %></p>
-      <p><strong>Durée :</strong> <%= @session.duration_seconds %> secondes</p>
+    <div class="results-card">
+      <div class="results-meta">
+        <p><strong>Élève :</strong> <%= @session.student.first_name %></p>
+        <p><strong>Texte :</strong> <%= @session.reading_text.title %></p>
+        <p><strong>Durée :</strong> <%= @session.duration_seconds %> secondes</p>
+      </div>
+
+      <% if @session.aborted? %>
+        <div class="score-block score-block--muted">
+          <p class="score-label">Lecture interrompue</p>
+          <p class="score-note">Aucun score n'a été calculé pour cette séance.</p>
+        </div>
+      <% elsif @session.status == "error" %>
+        <div class="score-block score-block--warning">
+          <p class="score-label">Erreur d'analyse</p>
+          <p class="score-note">Une erreur est survenue pendant le traitement. Réessaie une nouvelle séance.</p>
+        </div>
+      <% elsif @session.completion_rate.present? && @session.completion_rate < 50 %>
+        <div class="score-block score-block--warning">
+          <p class="score-value"><%= @session.mclm_score %> <span>MCLM</span></p>
+          <p class="score-note">
+            ⚠️ Seulement <%= @session.completion_rate %>% du texte a été lu — ce score n'est pas représentatif de la fluence réelle de l'élève.
+          </p>
+        </div>
+      <% else %>
+        <div class="score-block score-block--success">
+          <p class="score-value"><%= @session.mclm_score %> <span>MCLM</span></p>
+          <p class="score-note">
+            <%= @session.completion_rate %>% du texte lu
+          </p>
+        </div>
+      <% end %>
     </div>
 
-    <% if @session.aborted? %>
-      <div class="score-block score-block--muted">
-        <p class="score-label">Lecture interrompue</p>
-        <p class="score-note">Aucun score n'a été calculé pour cette séance.</p>
-      </div>
-    <% elsif @session.completion_rate.present? && @session.completion_rate < 50 %>
-      <div class="score-block score-block--warning">
-        <p class="score-value"><%= @session.mclm_score %> <span>MCLM</span></p>
-        <p class="score-note">
-          ⚠️ Seulement <%= @session.completion_rate %>% du texte a été lu — ce score n'est pas représentatif de la fluence réelle de l'élève.
-        </p>
-      </div>
-    <% else %>
-      <div class="score-block score-block--success">
-        <p class="score-value"><%= @session.mclm_score %> <span>MCLM</span></p>
-        <p class="score-note">
-          <%= @session.completion_rate %>% du texte lu
-        </p>
-      </div>
-    <% end %>
-  </div>
-
-  <p><%= link_to "← Retour à l'élève", student_path(@session.student), class: "back-link" %></p>
+    <p><%= link_to "← Retour à l'élève", student_path(@session.student), class: "back-link" %></p>
+  <% end %>
 </div>

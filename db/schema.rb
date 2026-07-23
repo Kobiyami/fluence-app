@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_21_195516) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_23_091449) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,7 +35,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_21_195516) do
     t.integer "duration_seconds"
     t.integer "mclm_score"
     t.bigint "reading_text_id", null: false
+    t.string "status"
     t.bigint "student_id", null: false
+    t.text "transcription"
     t.datetime "updated_at", null: false
     t.jsonb "word_alignment"
     t.integer "word_count_correct"

@@ -16,11 +16,6 @@ class SessionsController < ApplicationController
   end
 
   def stop
-    Rails.logger.info "=== STOP PARAMS ==="
-Rails.logger.info "aborted: #{params[:aborted]}"
-Rails.logger.info "duration: #{params[:duration_seconds]}"
-Rails.logger.info "audio_file present: #{params[:audio_file].present?}"
-Rails.logger.info "audio_file length: #{params[:audio_file]&.length}"
   @session = Session.find(params[:session_id])
   @session.duration_seconds = params[:duration_seconds].to_i
   @session.aborted = params[:aborted] == "true"
@@ -28,23 +23,17 @@ Rails.logger.info "audio_file length: #{params[:audio_file]&.length}"
   if !@session.aborted && params[:audio_file].present?
     audio_data = params[:audio_file].split(",").last
     audio_binary = Base64.decode64(audio_data)
-
     path = Rails.root.join("tmp", "session_#{@session.id}.webm")
     File.binwrite(path, audio_binary)
 
-    text = WhisperTranscriber.new(path).call
-    @session.transcription = text
-
-    # Calcul du score de fluence
-    scorer = FluencyScorer.new(
-      @session.reading_text.content,
-      text,
-      @session.duration_seconds
-    )
-    @session.assign_attributes(scorer.call)
+    @session.status = "processing"
+    @session.save!
+    FluencyAnalysisJob.perform_later(@session.id, path.to_s)
+  else
+    @session.status = "done"
+    @session.save!
   end
 
-  @session.save!
   redirect_to session_path(@session)
 end
 
