@@ -49,6 +49,26 @@
       <% else %>
         <p class="roster-last-session">Aucun mot outil pratiqué.</p>
       <% end %>
+
+      <h3 class="stats-subtitle">Progression mots outils</h3>
+      <% daily_pct = StudentWordAttempt.correct_per_minute_by_day(student) %>
+      <% if daily_pct.any? %>
+        <table class="stats-table">
+          <thead>
+            <tr><th>Date</th><th>% correct</th></tr>
+          </thead>
+          <tbody>
+            <% daily_pct.to_a.last(10).reverse_each do |day, pct| %>
+              <tr>
+                <td><%= day.strftime("%d/%m") %></td>
+                <td><%= pct %>%</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="roster-last-session">Aucune tentative enregistrée.</p>
+      <% end %>
     </section>
   <% end %>
 </div>
