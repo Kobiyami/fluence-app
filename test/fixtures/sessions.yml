@@ -2,12 +2,12 @@
 
 one:
   student: one
-  text: one
+  reading_text: one
   duration_seconds: 1
-  score_wpm: 1
+  mclm_score: 1
 
 two:
   student: two
-  text: two
+  reading_text: two
   duration_seconds: 1
-  score_wpm: 1
+  mclm_score: 1

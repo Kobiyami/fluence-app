@@ -2,22 +2,23 @@ require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "should get new" do
-    get sessions_new_url
+    get new_session_url, params: { student_id: students(:one).id, reading_text_id: reading_texts(:one).id }
     assert_response :success
   end
 
-  test "should get start" do
-    get sessions_start_url
+  test "should start" do
+    post sessions_start_url, params: { student_id: students(:one).id, reading_text_id: reading_texts(:one).id }
     assert_response :success
   end
 
-  test "should get stop" do
-    get sessions_stop_url
-    assert_response :success
+  test "should stop" do
+    session = sessions(:one)
+    post sessions_stop_url, params: { session_id: session.id, duration_seconds: 42, aborted: "true" }
+    assert_redirected_to session_path(session)
   end
 
   test "should get show" do
-    get sessions_show_url
+    get session_url(sessions(:one))
     assert_response :success
   end
 end
