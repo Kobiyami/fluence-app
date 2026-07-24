@@ -18,16 +18,36 @@
       <div class="student-accordion-body">
         <h3 class="stats-subtitle">Fluence de lecture</h3>
         <% summary = fluence_summary(student) %>
+        <% first_chart = first_attempts_chart(student) %>
+<% if first_chart %>
+  <details class="chart-accordion">
+    <summary class="chart-summary"><i class="ti ti-chart-line"></i> Progression sur les premières lectures</summary>
+    <div class="chart-wrapper">
+      <%= first_chart %>
+      <p class="chart-legend">
+        <span class="legend-dot legend-dot--mclm"></span> MCLM
+        <span class="legend-dot legend-dot--pct"></span> % lu
+      </p>
+    </div>
+  </details>
+<% end %>
         <% if summary.any? %>
           <% summary.each do |item| %>
             <details class="text-accordion">
               <summary class="text-summary">
-                <span class="text-title"><%= item[:text].title %></span>
-                <span class="text-meta">
-                  <%= item[:latest].created_at.strftime("%d/%m") %> ·
-                  <%= item[:latest].mclm_score %> MCLM ·
-                  <%= item[:latest].completion_rate %>%
-                </span>
+                <span class="text-title">
+  <%= item[:text].title %>
+  <span class="text-record">
+    <i class="ti ti-trophy"></i>
+    <%= item[:record] %> mots · <%= item[:record_completion] %>%
+  </span>
+</span>
+<span class="text-meta">
+  <span class="text-meta-label">Dernière lecture</span>
+  <%= item[:latest].created_at.strftime("%d/%m") %> ·
+  <%= item[:latest].mclm_score %> MCLM ·
+  <%= item[:latest].completion_rate %>%
+</span>
                 <span class="trend trend--<%= item[:trend] %>">
                   <% if item[:trend] == :progress %>
                     <i class="ti ti-trending-up"></i>
@@ -59,6 +79,18 @@
                   <% end %>
                 </tbody>
               </table>
+              <% if item[:attempts_chrono].size >= 2 %>
+  <details class="chart-accordion">
+    <summary class="chart-summary"><i class="ti ti-chart-line"></i> Graphique</summary>
+    <div class="chart-wrapper">
+      <%= attempts_chart_svg(item[:attempts_chrono]) %>
+      <p class="chart-legend">
+        <span class="legend-dot legend-dot--mclm"></span> MCLM
+        <span class="legend-dot legend-dot--pct"></span> % lu
+      </p>
+    </div>
+  </details>
+<% end %>
             </details>
           <% end %>
         <% else %>
