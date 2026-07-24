@@ -16,7 +16,7 @@
       </summary>
 
       <div class="student-accordion-body">
-        <div class="stats-tabs" data-controller="stats-tabs" data-stats-tabs-student-id-value="<%= student.id %>">
+        <div class="stats-tabs" data-controller="stats-tabs" data-stats-tabs-storage-key-value="stats_tab_<%= student.id %>" data-stats-tabs-default-value="fluence">
           <div class="tab-buttons">
             <button type="button" class="tab-button" data-tab="fluence" data-stats-tabs-target="button" data-action="click->stats-tabs#switch">
               <i class="ti ti-book-2"></i> Fluence de lecture
@@ -111,34 +111,72 @@
           </div>
 
           <div class="tab-panel" data-tab-panel="mots_outils" data-stats-tabs-target="panel" style="display:none">
-  <table class="stats-table">
-    <thead>
-      <tr><th>Mot</th><th>Niveau</th></tr>
-    </thead>
-    <tbody>
-      <% student.student_word_timings.order(allowed_time: :asc).each do |t| %>
-        <tr>
-          <td><%= t.mot_outil.text %></td>
-          <td>
-            <span class="tier-badge tier-badge--<%= t.tier %><%= ' tier-badge--never' if t.tier == :a_travailler && !t.ever_succeeded? %>">
-              <% case t.tier %>
-<% when :top %>
-  <i class="ti ti-thumb-up"></i> Top
-<% when :ok %>
-  Ok
-<% else %>
-  <% if t.ever_succeeded? %>
-    <i class="ti ti-alert-triangle"></i> À travailler
-  <% else %>
-    <i class="ti ti-flag"></i> Jamais réussi
-  <% end %>
-<% end %>
-            </span>
-          </td>
-        </tr>
+  <% nouveaux = student.mots_nouveaux %>
+  <% difficiles = student.mots_difficiles %>
+  <% consolider = student.mots_a_consolider %>
+  <% maitrises = student.mots_maitrises %>
+
+  <div class="stats-tabs" data-controller="stats-tabs" data-stats-tabs-storage-key-value="stats_category_<%= student.id %>" data-stats-tabs-default-value="difficiles">
+    <div class="tab-buttons tab-buttons--mini">
+      <button type="button" class="tab-button tab-button--mini" data-tab="nouveaux" data-stats-tabs-target="button" data-action="click->stats-tabs#switch">
+        Nouveautés (<%= nouveaux.count %>)
+      </button>
+      <button type="button" class="tab-button tab-button--mini" data-tab="difficiles" data-stats-tabs-target="button" data-action="click->stats-tabs#switch">
+        À travailler (<%= difficiles.count %>)
+      </button>
+      <button type="button" class="tab-button tab-button--mini" data-tab="consolider" data-stats-tabs-target="button" data-action="click->stats-tabs#switch">
+        Ok (<%= consolider.count %>)
+      </button>
+      <button type="button" class="tab-button tab-button--mini" data-tab="maitrises" data-stats-tabs-target="button" data-action="click->stats-tabs#switch">
+        Top (<%= maitrises.count %>)
+      </button>
+    </div>
+
+    <div class="tab-panel" data-tab-panel="nouveaux" data-stats-tabs-target="panel">
+      <% if nouveaux.any? %>
+        <ul class="word-simple-list">
+          <% nouveaux.each { |mot| %><li><%= mot.text %></li><% } %>
+        </ul>
+      <% else %>
+        <p class="roster-last-session">Aucun mot dans cette catégorie.</p>
       <% end %>
-    </tbody>
-  </table>
+    </div>
+
+    <div class="tab-panel" data-tab-panel="difficiles" data-stats-tabs-target="panel" style="display:none">
+      <% if difficiles.any? %>
+        <ul class="word-simple-list">
+          <% difficiles.each { |t| %>
+            <li>
+              <%= t.mot_outil.text %>
+              <% unless t.ever_succeeded? %><span class="tier-badge tier-badge--never">Jamais réussi</span><% end %>
+            </li>
+          <% } %>
+        </ul>
+      <% else %>
+        <p class="roster-last-session">Aucun mot dans cette catégorie.</p>
+      <% end %>
+    </div>
+
+    <div class="tab-panel" data-tab-panel="consolider" data-stats-tabs-target="panel" style="display:none">
+      <% if consolider.any? %>
+        <ul class="word-simple-list">
+          <% consolider.each { |t| %><li><%= t.mot_outil.text %></li><% } %>
+        </ul>
+      <% else %>
+        <p class="roster-last-session">Aucun mot dans cette catégorie.</p>
+      <% end %>
+    </div>
+
+    <div class="tab-panel" data-tab-panel="maitrises" data-stats-tabs-target="panel" style="display:none">
+      <% if maitrises.any? %>
+        <ul class="word-simple-list">
+          <% maitrises.each { |t| %><li><%= t.mot_outil.text %></li><% } %>
+        </ul>
+      <% else %>
+        <p class="roster-last-session">Aucun mot dans cette catégorie.</p>
+      <% end %>
+    </div>
+  </div>
 </div>
         </div>
       </div>

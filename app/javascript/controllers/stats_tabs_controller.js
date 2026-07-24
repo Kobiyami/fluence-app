@@ -2,16 +2,16 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["button", "panel"]
-  static values = { studentId: Number }
+  static values = { storageKey: String, default: String }
 
   connect() {
-    const saved = localStorage.getItem(`stats_tab_${this.studentIdValue}`) || "fluence"
+    const saved = localStorage.getItem(this.storageKeyValue) || this.defaultValue || "fluence"
     this.activate(saved)
   }
 
   switch(event) {
     const tab = event.currentTarget.dataset.tab
-    localStorage.setItem(`stats_tab_${this.studentIdValue}`, tab)
+    localStorage.setItem(this.storageKeyValue, tab)
     this.activate(tab)
   }
 

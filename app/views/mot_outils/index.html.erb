@@ -23,9 +23,11 @@
   <span class="roster-name"><%= mot.text %></span>
   <div class="roster-row-right">
     <span class="roster-last-session">Ajouté le <%= mot.created_at.strftime("%d/%m/%Y") %></span>
-    <%= button_to "Supprimer", mot_outil_path(mot), method: :delete,
-          data: { turbo_confirm: "Supprimer « #{mot.text} » ?" },
-          class: "btn-delete" %>
+    <%= button_to mot_outil_path(mot), method: :delete,
+      data: { turbo_confirm: "Supprimer « #{mot.text} » ?" },
+      class: "btn-delete-icon" do %>
+  <i class="ti ti-trash"></i>
+<% end %>
   </div>
 </li>
     <% end %>

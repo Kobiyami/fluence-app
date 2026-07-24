@@ -149,15 +149,27 @@ h1 {
   list-style: none;
   margin: 8px 0 0;
   padding: 0;
-  border-top: 1px solid var(--border);
+  max-width: 600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
 .roster-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 4px;
-  border-bottom: 1px solid var(--border);
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.roster-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .roster-identity {
@@ -1052,4 +1064,44 @@ a.exercise-card:hover {
 .btn-default-mix:hover {
   background: var(--accent-soft);
   text-decoration: none;
+}
+
+.tab-buttons--mini {
+  border-bottom: none;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tab-button--mini {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
+.tab-button--mini.tab-button--active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.word-simple-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.word-simple-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  width: auto;
 }

@@ -1,6 +1,6 @@
 class MotOutilsController < ApplicationController
   def index
-    @mot_outils = MotOutil.order(created_at: :desc)
+    @mot_outils = MotOutil.order(:text)
     @mot_outil = MotOutil.new
   end
 
@@ -9,7 +9,7 @@ class MotOutilsController < ApplicationController
     if @mot_outil.save
       redirect_to mot_outils_path, notice: "Mot ajouté."
     else
-      @mot_outils = MotOutil.order(created_at: :desc)
+      @mot_outils = MotOutil.order(:text)
       render :index, status: :unprocessable_entity
     end
   end
