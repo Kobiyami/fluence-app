@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   post "/login", to: "students#login_check"
   post "/transcriptions", to: "transcriptions#create"
 
-  resources :sessions, only: [:new, :show]
+  resources :sessions, only: [:new, :show, :destroy]
   post "/sessions/start", to: "sessions#start"
   post "/sessions/stop",  to: "sessions#stop"
 end

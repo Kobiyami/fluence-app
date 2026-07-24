@@ -3,10 +3,12 @@ class StudentWordAttempt < ApplicationRecord
   belongs_to :mot_outil
 
   def self.correct_per_minute_by_day(student)
-    where(student: student)
-      .group("DATE(created_at)")
-      .order("DATE(created_at)")
-      .pluck(Arel.sql("DATE(created_at)"), Arel.sql("ROUND(AVG(correct::int) * 100, 1)"))
-      .to_h
+    where(student: student, correct: true)
+      .group_by { |a| a.created_at.to_date }
+      .transform_values do |attempts|
+        total_seconds = attempts.sum(&:allowed_time)
+        next 0 if total_seconds.zero?
+        (attempts.size / (total_seconds / 60.0)).round(1)
+      end
   end
 end

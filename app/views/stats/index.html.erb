@@ -4,41 +4,74 @@
   <p class="eyebrow">Suivi</p>
   <h1>Progression des élèves</h1>
 
+  <% if notice %>
+    <p class="login-error login-error--success"><%= notice %></p>
+  <% end %>
+
   <% @students.each do |student| %>
-    <section class="stats-student">
-      <h2><%= student.name %></h2>
+    <details class="student-accordion">
+      <summary class="student-summary">
+        <div class="avatar"><%= student.first_name[0] %><%= student.last_name[0] %></div>
+        <span class="roster-name"><%= student.name %></span>
+      </summary>
 
-      <h3 class="stats-subtitle">Fluence de lecture</h3>
-      <% sessions = student.sessions.where.not(mclm_score: nil).order(created_at: :desc).limit(10) %>
-      <% if sessions.any? %>
-        <table class="stats-table">
-          <thead>
-            <tr><th>Date</th><th>Texte</th><th>MCLM</th><th>% lu</th></tr>
-          </thead>
-          <tbody>
-            <% sessions.each do |s| %>
-              <tr>
-                <td><%= s.created_at.strftime("%d/%m %H:%M") %></td>
-                <td><%= s.reading_text.title %></td>
-                <td><%= s.mclm_score %></td>
-                <td><%= s.completion_rate %>%</td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% else %>
-        <p class="roster-last-session">Aucune séance de lecture.</p>
-      <% end %>
+      <div class="student-accordion-body">
+        <h3 class="stats-subtitle">Fluence de lecture</h3>
+        <% summary = fluence_summary(student) %>
+        <% if summary.any? %>
+          <% summary.each do |item| %>
+            <details class="text-accordion">
+              <summary class="text-summary">
+                <span class="text-title"><%= item[:text].title %></span>
+                <span class="text-meta">
+                  <%= item[:latest].created_at.strftime("%d/%m") %> ·
+                  <%= item[:latest].mclm_score %> MCLM ·
+                  <%= item[:latest].completion_rate %>%
+                </span>
+                <span class="trend trend--<%= item[:trend] %>">
+                  <% if item[:trend] == :progress %>
+                    <i class="ti ti-trending-up"></i>
+                  <% elsif item[:trend] == :stagnant %>
+                    <i class="ti ti-minus"></i>
+                  <% else %>
+                    <i class="ti ti-trending-down"></i>
+                  <% end %>
+                </span>
+              </summary>
 
-      <h3 class="stats-subtitle">Mots outils</h3>
-      <% timings = student.student_word_timings.order(allowed_time: :asc) %>
-      <% if timings.any? %>
+              <table class="stats-table">
+                <thead>
+                  <tr><th>#</th><th>Date</th><th>MCLM</th><th>% lu</th><th></th></tr>
+                </thead>
+                <tbody>
+                  <% item[:attempts].each do |a| %>
+                    <tr>
+                      <td><%= a[:number] %></td>
+                      <td><%= a[:session].created_at.strftime("%d/%m %H:%M") %></td>
+                      <td><%= a[:session].mclm_score %></td>
+                      <td><%= a[:session].completion_rate %>%</td>
+                      <td>
+                        <%= button_to "🗑", session_path(a[:session]), method: :delete,
+                              data: { turbo_confirm: "Supprimer cette séance ?" },
+                              class: "btn-delete-icon" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </details>
+          <% end %>
+        <% else %>
+          <p class="roster-last-session">Aucune séance de lecture.</p>
+        <% end %>
+
+        <h3 class="stats-subtitle">Mots outils</h3>
         <table class="stats-table">
           <thead>
             <tr><th>Mot</th><th>Temps actuel</th></tr>
           </thead>
           <tbody>
-            <% timings.each do |t| %>
+            <% student.student_word_timings.order(allowed_time: :asc).each do |t| %>
               <tr>
                 <td><%= t.mot_outil.text %></td>
                 <td><%= t.allowed_time %>s</td>
@@ -46,29 +79,7 @@
             <% end %>
           </tbody>
         </table>
-      <% else %>
-        <p class="roster-last-session">Aucun mot outil pratiqué.</p>
-      <% end %>
-
-      <h3 class="stats-subtitle">Progression mots outils</h3>
-      <% daily_pct = StudentWordAttempt.correct_per_minute_by_day(student) %>
-      <% if daily_pct.any? %>
-        <table class="stats-table">
-          <thead>
-            <tr><th>Date</th><th>% correct</th></tr>
-          </thead>
-          <tbody>
-            <% daily_pct.to_a.last(10).reverse_each do |day, pct| %>
-              <tr>
-                <td><%= day.strftime("%d/%m") %></td>
-                <td><%= pct %>%</td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% else %>
-        <p class="roster-last-session">Aucune tentative enregistrée.</p>
-      <% end %>
-    </section>
+      </div>
+    </details>
   <% end %>
 </div>

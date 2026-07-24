@@ -40,4 +40,10 @@ end
   def show
     @session = Session.find(params[:id])
   end
+def destroy
+  session = Session.find(params[:id])
+  session.destroy
+  redirect_to suivi_path, notice: "Séance supprimée."
+end
+
 end
