@@ -111,20 +111,35 @@
           </div>
 
           <div class="tab-panel" data-tab-panel="mots_outils" data-stats-tabs-target="panel" style="display:none">
-            <table class="stats-table">
-              <thead>
-                <tr><th>Mot</th><th>Temps actuel</th></tr>
-              </thead>
-              <tbody>
-                <% student.student_word_timings.order(allowed_time: :asc).each do |t| %>
-                  <tr>
-                    <td><%= t.mot_outil.text %></td>
-                    <td><%= t.allowed_time %>s</td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
+  <table class="stats-table">
+    <thead>
+      <tr><th>Mot</th><th>Niveau</th></tr>
+    </thead>
+    <tbody>
+      <% student.student_word_timings.order(allowed_time: :asc).each do |t| %>
+        <tr>
+          <td><%= t.mot_outil.text %></td>
+          <td>
+            <span class="tier-badge tier-badge--<%= t.tier %><%= ' tier-badge--never' if t.tier == :a_travailler && !t.ever_succeeded? %>">
+              <% case t.tier %>
+<% when :top %>
+  <i class="ti ti-thumb-up"></i> Top
+<% when :ok %>
+  Ok
+<% else %>
+  <% if t.ever_succeeded? %>
+    <i class="ti ti-alert-triangle"></i> À travailler
+  <% else %>
+    <i class="ti ti-flag"></i> Jamais réussi
+  <% end %>
+<% end %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
         </div>
       </div>
     </details>

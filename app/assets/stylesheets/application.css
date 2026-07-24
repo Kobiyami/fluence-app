@@ -974,3 +974,33 @@ a.exercise-card:hover {
 .tab-panel {
   padding-top: 4px;
 }
+
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tier-badge--top {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.tier-badge--ok {
+  background: #F1EFE8;
+  color: var(--ink-secondary);
+}
+
+.tier-badge--a_travailler {
+  background: #FBEFE3;
+  color: #B3703A;
+}
+
+.tier-badge--never {
+  background: #F5DADA;
+  color: #B3423A;
+}

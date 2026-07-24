@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_23_134144) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_24_115015) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,7 +48,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_134144) do
   end
 
   create_table "student_word_attempts", force: :cascade do |t|
-    t.integer "allowed_time"
+    t.decimal "allowed_time", precision: 3, scale: 1
     t.boolean "correct"
     t.datetime "created_at", null: false
     t.bigint "mot_outil_id", null: false
@@ -59,7 +59,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_134144) do
   end
 
   create_table "student_word_timings", force: :cascade do |t|
-    t.integer "allowed_time"
+    t.decimal "allowed_time", precision: 3, scale: 1, default: "5.0"
     t.datetime "created_at", null: false
     t.datetime "last_seen_at"
     t.bigint "mot_outil_id", null: false

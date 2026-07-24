@@ -8,7 +8,9 @@ class MotOutilExercisesController < ApplicationController
 
     @word_sequence = words.map do |mot|
       timing = StudentWordTiming.find_by(student: @student, mot_outil: mot)
-      { id: mot.id, text: mot.text, allowed_time: timing&.allowed_time || StudentWordTiming::DEFAULT_ALLOWED_TIME }
+      allowed = timing&.allowed_time&.to_f || StudentWordTiming::DEFAULT_ALLOWED_TIME
+recording = timing&.recording_duration || [allowed, 1.2].max
+{ id: mot.id, text: mot.text, allowed_time: allowed, recording_duration: recording }
     end
   end
 
