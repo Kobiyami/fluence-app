@@ -1,0 +1,34 @@
+<div class="dashboard">
+  <p><%= link_to "← #{@student.first_name}", student_path(@student), class: "back-link" %></p>
+
+  <div class="choose-eyebrow-row">
+  <p class="eyebrow">Mots outils</p>
+  <%= link_to play_mot_outils_path(student_id: @student.id), class: "btn-default-mix" do %>
+    <i class="ti ti-bolt"></i> Un peu de tout
+  <% end %>
+</div>
+<h1>Ou choisir par catégorie</h1>
+
+  <%= form_with url: play_mot_outils_path, method: :get, class: "choose-form" do %>
+    <%= hidden_field_tag :student_id, @student.id %>
+
+    <label class="choose-category">
+      <%= check_box_tag "categories[]", "nouveaux", true %>
+      Nouveautés (<%= @student.mots_nouveaux.count %>)
+    </label>
+    <label class="choose-category">
+      <%= check_box_tag "categories[]", "difficiles", true %>
+      Difficultés (<%= @student.mots_difficiles.count %>)
+    </label>
+    <label class="choose-category">
+      <%= check_box_tag "categories[]", "consolider", false %>
+      À consolider (<%= @student.mots_a_consolider.count %>)
+    </label>
+    <label class="choose-category">
+      <%= check_box_tag "categories[]", "maitrises", false %>
+      Maîtrisés (<%= @student.mots_maitrises.count %>)
+    </label>
+
+    <%= submit_tag "Lancer la séquence", class: "btn-reading btn-reading--start" %>
+  <% end %>
+</div>

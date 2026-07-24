@@ -1004,3 +1004,52 @@ a.exercise-card:hover {
   background: #F5DADA;
   color: #B3423A;
 }
+
+.choose-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+}
+
+.choose-category {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.choose-eyebrow-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.btn-default-mix {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.btn-default-mix:hover {
+  background: var(--accent-soft);
+  text-decoration: none;
+}
+
+.btn-default-mix:hover {
+  background: var(--accent-soft);
+  text-decoration: none;
+}

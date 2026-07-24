@@ -2,17 +2,24 @@ class MotOutilExercisesController < ApplicationController
   protect_from_forgery with: :null_session
 
   def play
-    @student = Student.find(params[:student_id])
-    @session_duration = params[:duration]&.to_i || 60
-    words = MotOutil.order(:created_at)
+  @student = Student.find(params[:student_id])
+  @session_duration = params[:duration]&.to_i || 60
 
-    @word_sequence = words.map do |mot|
-      timing = StudentWordTiming.find_by(student: @student, mot_outil: mot)
-      allowed = timing&.allowed_time&.to_f || StudentWordTiming::DEFAULT_ALLOWED_TIME
-recording = timing&.recording_duration || [allowed, 1.2].max
-{ id: mot.id, text: mot.text, allowed_time: allowed, recording_duration: recording }
-    end
+  words = if params[:categories].present?
+            words_for_categories(@student, params[:categories])
+          elsif params[:mot_outil_ids].present?
+            MotOutil.where(id: params[:mot_outil_ids])
+          else
+            default_word_mix(@student)
+          end
+
+  @word_sequence = words.map do |mot|
+    timing = StudentWordTiming.find_by(student: @student, mot_outil: mot)
+    allowed = timing&.allowed_time&.to_f || StudentWordTiming::DEFAULT_ALLOWED_TIME
+    recording = timing&.recording_duration || [allowed, 1.2].max
+    { id: mot.id, text: mot.text, allowed_time: allowed, recording_duration: recording }
   end
+end
 
   def transcribe_word
     student = Student.find(params[:student_id])
@@ -45,12 +52,33 @@ end
     render json: { mot_outil_id: mot_outil.id, text: mot_outil.text, correct: correct, heard: transcription.strip }
   end
 
+def choose
+  @student = Student.find(params[:student_id])
+end
+
 def pronounce
   path = WordPronouncer.new(params[:text]).call
   send_file path, type: "audio/wav", disposition: "inline"
 end
 
   private
+
+def default_word_mix(student)
+  nouveaux = student.mots_nouveaux.to_a
+  difficiles = student.mots_difficiles.map(&:mot_outil)
+  maitrises = student.mots_maitrises.map(&:mot_outil).sample(2)
+
+  (nouveaux + difficiles + maitrises).uniq.shuffle
+end
+
+def words_for_categories(student, categories)
+  words = []
+  words += student.mots_nouveaux.to_a if categories.include?("nouveaux")
+  words += student.mots_difficiles.map(&:mot_outil) if categories.include?("difficiles")
+  words += student.mots_a_consolider.map(&:mot_outil) if categories.include?("consolider")
+  words += student.mots_maitrises.map(&:mot_outil) if categories.include?("maitrises")
+  words.uniq.shuffle
+end
 
   def normalize(text)
     cleaned = text.to_s.unicode_normalize(:nfd).gsub(/\p{Mn}/, "")
